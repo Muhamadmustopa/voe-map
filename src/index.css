@@ -1,0 +1,115 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,
+body,
+#root{
+  width:100%;
+  height:100%;
+}
+
+body{
+  font-family:
+  Inter,
+  system-ui,
+  sans-serif;
+
+  background:
+  linear-gradient(
+    135deg,
+    #667eea 0%,
+    #764ba2 100%
+  );
+
+  overflow:hidden;
+
+  color:white;
+}
+
+/* SCROLL */
+::-webkit-scrollbar{
+  width:6px;
+}
+*{
+  -webkit-tap-highlight-color: transparent;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,0.3);
+  border-radius:10px;
+}
+
+/* BUTTON */
+button{
+  cursor:pointer;
+  transition:.25s;
+}
+
+button:hover{
+  transform:scale(1.02);
+}
+
+/* INPUT */
+input,
+textarea{
+  outline:none;
+  font-family:inherit;
+}
+
+/* MOBILE APP WRAPPER */
+#root{
+  max-width:430px;
+  margin:auto;
+
+  position:relative;
+
+  overflow:hidden;
+
+  background:
+  linear-gradient(
+    180deg,
+    rgba(255,255,255,0.05),
+    rgba(255,255,255,0.02)
+  );
+
+  backdrop-filter:blur(20px);
+}
+
+/* GLASS EFFECT */
+.glass{
+  background:
+  rgba(255,255,255,0.15);
+
+  backdrop-filter:
+  blur(20px);
+
+  border:
+  1px solid rgba(255,255,255,0.2);
+
+  box-shadow:
+  0 8px 32px rgba(0,0,0,0.15);
+}
+
+/* ANIMATION */
+.fade-in{
+  animation:fade .3s ease;
+}
+
+@keyframes fade{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
