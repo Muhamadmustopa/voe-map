@@ -344,22 +344,23 @@ if (!user) {
   // =========================
   return (
     <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        background: "#f4f6f8",
-      }}
-    >
+  style={{
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    background: "#f4f6f8",
+  }}
+  >
 
       {/* CONTENT */}
       <div
-        style={{
-          flex: 1,
-          padding: 20,
-          paddingBottom: "120px",
-          overflowY: "auto",
-      }}
+    style={{
+    flex: 1,
+    padding: 20,
+    paddingBottom: "180px",
+    overflowY: "auto",
+    WebkitOverflowScrolling: "touch",
+  }}
 >
 
         {menu === "home" && (

@@ -235,15 +235,11 @@ const styles = {
   button: {
 
     width: "100%",
-
     marginTop: "22px",
-
+    marginBottom: "80px",
     padding: "16px",
-
     border: "none",
-
     borderRadius: "20px",
-
     background:
       "linear-gradient(135deg,#6366f1,#8b5cf6)",
 
