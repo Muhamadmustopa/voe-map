@@ -354,7 +354,7 @@ if (!user) {
 
       {/* CONTENT */}
       <div
-    style={{
+  style={{
     flex: 1,
     padding: 20,
     paddingBottom: "180px",
@@ -362,7 +362,6 @@ if (!user) {
     WebkitOverflowScrolling: "touch",
   }}
 >
-
         {menu === "home" && (
           <Home
             user={user}

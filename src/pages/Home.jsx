@@ -236,7 +236,7 @@ const styles = {
 
     width: "100%",
     marginTop: "22px",
-    marginBottom: "80px",
+    marginBottom: "100px",
     padding: "16px",
     border: "none",
     borderRadius: "20px",
