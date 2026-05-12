@@ -146,48 +146,50 @@ export default function Admin({ allData }) {
       // EMAIL
       try {
 
-        await fetch(
-          "/.netlify/functions/sendReply",
-          {
+        const sendReply = async (item) => {
 
-            method: "POST",
+  try {
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-
-            body: JSON.stringify({
-
-              to: item.email,
-
-              mood: item.mood,
-
-              note: item.note,
-
-              reply:
-                replyMap[item.id],
-            }),
-          }
-        );
-
-      } catch (e) {
-
-        console.log(
-          "Email belum aktif",
-          e
-        );
-      }
-
-      alert("Reply berhasil dikirim");
-
-    } catch (err) {
-
-      console.log(err);
-
-      alert("Gagal kirim reply");
+    if (!replyMap[item.id]) {
+      alert("Isi balasan dulu");
+      return;
     }
-  };
+
+    const docRef = doc(
+      db,
+      "moods",
+      item.id
+    );
+
+    await updateDoc(docRef, {
+      reply: replyMap[item.id],
+      status: "replied",
+      replyAt: serverTimestamp(),
+      replyRead: false,
+    });
+
+    // EMAILJS
+    await emailjs.send(
+      "service_9e912oa",
+      "template_n5ncvx4",
+      {
+        to_email: item.email,
+        mood: item.mood,
+        note: item.note,
+        reply: replyMap[item.id],
+      },
+      "mACZL1JrwWfQc1NAY"
+    );
+
+    alert("Reply berhasil dikirim");
+
+  } catch (err) {
+
+    console.log(err);
+
+    alert("Gagal kirim reply");
+  }
+};
 
   // =========================
   // EXPORT EXCEL
