@@ -1,64 +1,47 @@
-const { Resend } = require("resend");
-
-exports.handler = async (event) => {
+const sendReply = async (item) => {
 
   try {
 
-    const body = JSON.parse(event.body);
+    if (!replyMap[item.id]) {
 
-    const {
-      to,
-      mood,
-      note,
-      reply,
-    } = body;
+      alert("Isi balasan dulu");
 
-    const resend = new Resend(
-      process.env.RESEND_API_KEY
+      return;
+    }
+
+    const docRef = doc(
+      db,
+      "moods",
+      item.id
     );
 
-    const data = await resend.emails.send({
-
-      from:
-        "Mind Share <onboarding@resend.dev>",
-
-      to: [to],
-
-      subject:
-        "HRDGA Reply - Mind Share MAP",
-
-      html: `
-        <div style="font-family:sans-serif">
-          <h2>💬 HRDGA Reply</h2>
-
-          <p><b>Mood:</b> ${mood}</p>
-
-          <p><b>Cerita:</b><br/>
-          ${note}</p>
-
-          <hr/>
-
-          <p><b>Balasan HRDGA:</b></p>
-
-          <p>${reply}</p>
-        </div>
-      `,
+    // UPDATE FIRESTORE
+    await updateDoc(docRef, {
+      reply: replyMap[item.id],
+      status: "replied",
+      replyAt: serverTimestamp(),
+      replyRead: false,
     });
 
-    console.log(data);
+    // SEND EMAIL
+    await emailjs.send(
+      "service_9e912oa",
+      "template_n5ncvx4",
+      {
+        to_email: item.email,
+        mood: item.mood,
+        note: item.note,
+        reply: replyMap[item.id],
+      },
+      "mACZL1JrwWfQc1NAY"
+    );
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify(data),
-    };
+    alert("Reply berhasil dikirim");
 
   } catch (err) {
 
     console.log(err);
 
-    return {
-      statusCode: 500,
-      body: JSON.stringify(err),
-    };
+    alert("Gagal kirim reply");
   }
 };

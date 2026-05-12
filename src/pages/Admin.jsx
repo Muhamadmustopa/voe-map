@@ -10,6 +10,7 @@ import { db } from "../firebase";
 
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import emailjs from "@emailjs/browser";
 
 export default function Admin({ allData }) {
 
