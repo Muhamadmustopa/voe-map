@@ -130,7 +130,7 @@ const styles = {
 
     position: "fixed",
 
-    bottom: "18px",
+    bottom: "max(18px, env(safe-area-inset-bottom))",
 
     left: "50%",
 

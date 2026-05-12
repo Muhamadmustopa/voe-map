@@ -350,15 +350,15 @@ if (!user) {
     flexDirection: "column",
     background: "#f4f6f8",
   }}
-  >
+>
 
       {/* CONTENT */}
       <div
   style={{
     flex: 1,
     padding: 20,
-    paddingBottom: "180px",
-    overflowY: "auto",
+    paddingBottom: "160px",
+    overflowY: "scroll",
     WebkitOverflowScrolling: "touch",
   }}
 >
