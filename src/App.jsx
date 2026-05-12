@@ -345,16 +345,15 @@ if (!user) {
   return (
     <div
   style={{
-    minHeight: "100vh",
-    background: "#f4f6f8",
-    overflowX: "hidden",
-  }}
+      minHeight: "100vh",
+      background: "#f4f6f8",
+      overflowX: "hidden",
+    }}
 >
 
       {/* CONTENT */}
       <div
   style={{
-    flex: 1,
     padding: 20,
     paddingBottom: "160px",
   }}
