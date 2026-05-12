@@ -29,29 +29,23 @@ exports.handler = async (event) => {
 
       html: `
         <div style="font-family:sans-serif">
-
           <h2>💬 HRDGA Reply</h2>
 
-          <p>
-            <b>Mood:</b> ${mood}
-          </p>
+          <p><b>Mood:</b> ${mood}</p>
 
-          <p>
-            <b>Cerita:</b><br/>
-            ${note}
-          </p>
+          <p><b>Cerita:</b><br/>
+          ${note}</p>
 
           <hr/>
 
-          <p>
-            <b>Balasan HRDGA:</b>
-          </p>
+          <p><b>Balasan HRDGA:</b></p>
 
           <p>${reply}</p>
-
         </div>
       `,
     });
+
+    console.log(data);
 
     return {
       statusCode: 200,
@@ -60,9 +54,11 @@ exports.handler = async (event) => {
 
   } catch (err) {
 
+    console.log(err);
+
     return {
       statusCode: 500,
-      body: err.toString(),
+      body: JSON.stringify(err),
     };
   }
 };
