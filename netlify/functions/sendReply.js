@@ -1,6 +1,6 @@
 const { Resend } = require("resend");
 
-exports.handler = async (event) => {
+exports.handler = async () => {
 
   try {
 
@@ -11,10 +11,6 @@ exports.handler = async (event) => {
         body: "RESEND_API_KEY NOT FOUND",
       };
     }
-
-    const resend = new Resend(
-      process.env.RESEND_API_KEY
-    );
 
     return {
       statusCode: 200,
