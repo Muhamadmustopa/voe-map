@@ -1,20 +1,61 @@
 const { Resend } = require("resend");
 
-exports.handler = async () => {
+exports.handler = async (event) => {
 
   try {
 
-    if (!process.env.RESEND_API_KEY) {
+    const body = JSON.parse(event.body);
 
-      return {
-        statusCode: 500,
-        body: "RESEND_API_KEY NOT FOUND",
-      };
-    }
+    const {
+      to,
+      mood,
+      note,
+      reply,
+    } = body;
+
+    const resend = new Resend(
+      process.env.RESEND_API_KEY
+    );
+
+    const data = await resend.emails.send({
+
+      from:
+        "Mind Share <onboarding@resend.dev>",
+
+      to: [to],
+
+      subject:
+        "HRDGA Reply - Mind Share MAP",
+
+      html: `
+        <div style="font-family:sans-serif">
+
+          <h2>💬 HRDGA Reply</h2>
+
+          <p>
+            <b>Mood:</b> ${mood}
+          </p>
+
+          <p>
+            <b>Cerita:</b><br/>
+            ${note}
+          </p>
+
+          <hr/>
+
+          <p>
+            <b>Balasan HRDGA:</b>
+          </p>
+
+          <p>${reply}</p>
+
+        </div>
+      `,
+    });
 
     return {
       statusCode: 200,
-      body: "API KEY CONNECTED",
+      body: JSON.stringify(data),
     };
 
   } catch (err) {
