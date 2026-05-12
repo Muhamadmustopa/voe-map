@@ -346,9 +346,8 @@ if (!user) {
     <div
   style={{
     minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
     background: "#f4f6f8",
+    overflowX: "hidden",
   }}
 >
 
@@ -358,8 +357,6 @@ if (!user) {
     flex: 1,
     padding: 20,
     paddingBottom: "160px",
-    overflowY: "scroll",
-    WebkitOverflowScrolling: "touch",
   }}
 >
         {menu === "home" && (
