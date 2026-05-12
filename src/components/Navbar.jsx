@@ -131,64 +131,72 @@ const styles = {
     position: "fixed",
 
     bottom: "max(18px, env(safe-area-inset-bottom))",
-
+    
     left: "50%",
-
+    
     transform: "translateX(-50%)",
-
+    
     width: "94%",
-
+    
     maxWidth: "400px",
-
+    
     display: "flex",
-
+    
     justifyContent: "space-around",
-
+    
     alignItems: "center",
-
+    
     padding: "14px 10px",
-
+    
     borderRadius: "30px",
-
+    
     background:
-      "rgba(255,255,255,0.12)",
-
+    
+    "rgba(255,255,255,0.12)",
+    
     backdropFilter:
       "blur(20px)",
-
-    border:
+    
+      border:
       "1px solid rgba(255,255,255,0.2)",
-
-    boxShadow:
+    
+      boxShadow:
       "0 8px 32px rgba(0,0,0,0.2)",
+    
+      zIndex: 999,
+    
+      touchAction: "manipulation",
+    
+      pointerEvents: "none",
 
-    zIndex: 999,
   },
 
   item: {
 
-    display: "flex",
+  display: "flex",
 
-    flexDirection: "column",
+  flexDirection: "column",
 
-    alignItems: "center",
+  alignItems: "center",
 
-    justifyContent: "center",
+  justifyContent: "center",
 
-    gap: "4px",
+  gap: "4px",
 
-    padding: "8px 10px",
+  padding: "8px 10px",
 
-    borderRadius: "16px",
+  borderRadius: "16px",
 
-    transition: ".25s",
+  transition: ".25s",
 
-    cursor: "pointer",
+  cursor: "pointer",
 
-    minWidth: "55px",
+  minWidth: "55px",
 
-    position: "relative",
-  },
+  position: "relative",
+
+  pointerEvents: "auto",
+},
 
   label: {
 
