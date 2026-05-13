@@ -10,42 +10,40 @@ export default function Home({
   getMoodData,
 }) {
 
-  const moodData = getMoodData(moodValue);
+  const getMoodData = (value) => {
 
-  return (
-    <div className="fade-in">
+  if (value <= 33) {
+    return {
+      label: "Unhappy",
+      emoji: "😢",
+    };
+  }
 
-      {/* HEADER */}
-      <div style={styles.header}>
+  if (value <= 66) {
+    return {
+      label: "Normal",
+      emoji: "🙂",
+    };
+  }
 
-        <div>
-          <h2 style={styles.greeting}>
-            Hi,
-          </h2>
-
-          <h1 style={styles.name}>
-            {user.displayName}
-          </h1>
-        </div>
-
-        <div style={styles.avatar}>
-          😊
-        </div>
-
-      </div>
-
-      {/* MAIN CARD */}
+  return {
+    label: "Happy",
+    emoji: "😄",
+  };
+};
+    {/* MAIN CARD */}
       <div style={styles.card}>
 
         {/* EMOJI */}
-        <div
-          style={{
-            ...styles.emoji,
-            transform: `translateX(${(moodValue - 2) * 20}px) scale(${1 + moodValue * 0.05})`,
-          }}
-        >
-          {moodData.emoji}
-        </div>
+      <div
+        style={{
+        ...styles.emoji,
+        transform: `scale(${1 + moodValue / 250})`,
+        transition: "0.15s linear",
+      }}
+    >
+      {moodData.emoji}
+      </div>
 
         {/* LABEL */}
         <h2 style={styles.moodLabel}>
@@ -64,25 +62,26 @@ export default function Home({
           <span style={styles.sliderEmoji}></span>
 
           <input
-            type="range"
-            min="1"
-            max="3"
-            step="1"
-            value={moodValue}
-            onChange={(e) => {
+          type="range"
+          min="1"
+          max="100"
+          value={moodValue}
+          onChange={(e) => {
 
-              const val =
-                Number(e.target.value);
+          const val = Number(e.target.value);
 
-              setMoodValue(val);
+          setMoodValue(val);
 
-              setMood(
-                getMoodData(val).label
-              );
-            }}
-            style={styles.slider}
-          />
-
+          if (val <= 33) {
+          setMood("Unhappy");
+          } else if (val <= 66) {
+          setMood("Normal");
+          } else {
+          setMood("Happy");
+        }
+      }}
+    style={styles.slider}
+  />
           <span style={styles.sliderEmoji}></span>
         </div>
 
@@ -186,11 +185,14 @@ const styles = {
   },
 
   emoji: {
-    fontSize: "90px",
-    textAlign: "center",
+  fontSize: "85px",
+  textAlign: "center",
 
-    transition:
-      "all .35s ease",
+  transition:
+    "all .25s ease",
+
+  transform:
+    `scale(${1 + moodValue / 250})`,
   },
 
   moodLabel: {
