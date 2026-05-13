@@ -125,51 +125,39 @@ function NavItem({
 }
 
 const styles = {
+wrapper: {
 
-  wrapper: {
+  position: "fixed",
 
-    position: "fixed",
+  bottom: "0",
 
-    bottom: "max(18px, env(safe-area-inset-bottom))",
-    
-    left: "50%",
-    
-    transform: "translateX(-50%)",
-    
-    width: "94%",
-    
-    maxWidth: "400px",
-    
-    display: "flex",
-    
-    justifyContent: "space-around",
-    
-    alignItems: "center",
-    
-    padding: "14px 10px",
-    
-    borderRadius: "30px",
-    
-    background:
-    
+  left: "0",
+
+  width: "100%",
+
+  display: "flex",
+
+  justifyContent: "space-around",
+
+  alignItems: "center",
+
+  padding: "12px 10px calc(12px + env(safe-area-inset-bottom))",
+
+  background:
     "rgba(255,255,255,0.12)",
-    
-    backdropFilter:
-      "blur(20px)",
-    
-      border:
-      "1px solid rgba(255,255,255,0.2)",
-    
-      boxShadow:
-      "0 8px 32px rgba(0,0,0,0.2)",
-    
-      zIndex: 999,
-    
-      touchAction: "manipulation",
-    
-      pointerEvents: "none",
 
-  },
+  backdropFilter:
+    "blur(20px)",
+
+  borderTop:
+    "1px solid rgba(255,255,255,0.15)",
+
+  boxShadow:
+    "0 -8px 32px rgba(0,0,0,0.15)",
+
+  zIndex: 9999,
+
+},
 
   item: {
 

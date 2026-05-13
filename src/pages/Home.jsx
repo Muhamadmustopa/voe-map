@@ -7,43 +7,48 @@ export default function Home({
   note,
   setNote,
   submitData,
-  getMoodData,
 }) {
 
   const getMoodData = (value) => {
+    if (value <= 33) {
+      return {
+        label: "Unhappy",
+        emoji: "😢",
+      };
+    }
 
-  if (value <= 33) {
+    if (value <= 66) {
+      return {
+        label: "Normal",
+        emoji: "🙂",
+      };
+    }
+
     return {
-      label: "Unhappy",
-      emoji: "😢",
+      label: "Happy",
+      emoji: "😄",
     };
-  }
-
-  if (value <= 66) {
-    return {
-      label: "Normal",
-      emoji: "🙂",
-    };
-  }
-
-  return {
-    label: "Happy",
-    emoji: "😄",
   };
-};
-    {/* MAIN CARD */}
+
+  const moodData = getMoodData(moodValue);
+
+  return (
+    <div>
+
+      {/* MAIN CARD */}
       <div style={styles.card}>
+        <h2 style={styles.userName}> Hi, {user?.displayName} 👋</h2>
 
         {/* EMOJI */}
-      <div
-        style={{
-        ...styles.emoji,
-        transform: `scale(${1 + moodValue / 250})`,
-        transition: "0.15s linear",
-      }}
-    >
-      {moodData.emoji}
-      </div>
+        <div
+          style={{
+            ...styles.emoji,
+            transform: `scale(${1 + moodValue / 250})`,
+            transition: "0.15s linear",
+          }}
+        >
+          {moodData.emoji}
+        </div>
 
         {/* LABEL */}
         <h2 style={styles.moodLabel}>
@@ -52,8 +57,7 @@ export default function Home({
 
         {/* TEXT SLIDER */}
         <p style={styles.sliderText}>
-          Geser untuk menunjukan
-          perasaan kamu hari ini
+          Geser untuk menunjukan perasaan kamu hari ini
         </p>
 
         {/* SLIDER */}
@@ -62,44 +66,38 @@ export default function Home({
           <span style={styles.sliderEmoji}></span>
 
           <input
-          type="range"
-          min="1"
-          max="100"
-          value={moodValue}
-          onChange={(e) => {
+            type="range"
+            min="1"
+            max="100"
+            value={moodValue}
+            onChange={(e) => {
+              const val = Number(e.target.value);
+              setMoodValue(val);
 
-          const val = Number(e.target.value);
+              if (val <= 33) {
+                setMood("Unhappy");
+              } else if (val <= 66) {
+                setMood("Normal");
+              } else {
+                setMood("Happy");
+              }
+            }}
+            style={styles.slider}
+          />
 
-          setMoodValue(val);
-
-          if (val <= 33) {
-          setMood("Unhappy");
-          } else if (val <= 66) {
-          setMood("Normal");
-          } else {
-          setMood("Happy");
-        }
-      }}
-    style={styles.slider}
-  />
           <span style={styles.sliderEmoji}></span>
         </div>
 
         {/* QUESTION */}
         <p style={styles.question}>
-          Ceritakan perasaan,
-          saran masukan atau keluhan
-          kamu tentang lingkungan
-          kerja kita ya..
+          Ceritakan perasaan, saran masukan atau keluhan kamu tentang lingkungan kerja kita ya..
         </p>
 
         {/* TEXTAREA */}
         <textarea
           placeholder="Tulis disini..."
           value={note}
-          onChange={(e) =>
-            setNote(e.target.value)
-          }
+          onChange={(e) => setNote(e.target.value)}
           style={styles.textarea}
         />
 
@@ -112,204 +110,140 @@ export default function Home({
         </button>
 
       </div>
-
     </div>
   );
 }
 
+/* ================= STYLE ================= */
+
 const styles = {
+
+   userName: {
+    textAlign: "center",
+    fontSize: "24px",
+    fontWeight: "700",
+    color: "#0f172a",
+    marginBottom: "10px",
+  },
 
   header: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-
     marginBottom: "25px",
   },
 
   greeting: {
     fontSize: "18px",
     fontWeight: "500",
-
     color: "#64748b",
   },
 
   name: {
     fontSize: "30px",
     fontWeight: "800",
-
     color: "#0f172a",
-
     marginTop: "4px",
   },
 
   avatar: {
-
     width: "60px",
     height: "60px",
-
     borderRadius: "50%",
-
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-
     fontSize: "28px",
-
-    background:
-      "linear-gradient(135deg,#6366f1,#8b5cf6)",
-
+    background: "linear-gradient(135deg,#6366f1,#8b5cf6)",
     color: "white",
-
-    boxShadow:
-      "0 10px 25px rgba(99,102,241,.35)",
+    boxShadow: "0 10px 25px rgba(99,102,241,.35)",
   },
 
   card: {
-
-    background:
-      "rgba(255,255,255,0.78)",
-
-    backdropFilter:
-      "blur(20px)",
-
-    border:
-      "1px solid rgba(255,255,255,0.3)",
-
+    background: "rgba(255,255,255,0.78)",
+    backdropFilter: "blur(20px)",
+    border: "1px solid rgba(255,255,255,0.3)",
     borderRadius: "32px",
-
     padding: "25px",
-
-    boxShadow:
-      "0 10px 40px rgba(0,0,0,0.08)",
+    boxShadow: "0 10px 40px rgba(0,0,0,0.08)",
   },
 
   emoji: {
-  fontSize: "85px",
-  textAlign: "center",
-
-  transition:
-    "all .25s ease",
-
-  transform:
-    `scale(${1 + moodValue / 250})`,
+    fontSize: "85px",
+    textAlign: "center",
+    transition: "all .25s ease",
   },
 
   moodLabel: {
-
     textAlign: "center",
-
     marginTop: "10px",
     marginBottom: "16px",
-
     fontSize: "28px",
-
     color: "#0f172a",
-
     fontWeight: "700",
   },
 
   sliderText: {
-
     textAlign: "center",
-
     fontSize: "13px",
-
     color: "#64748b",
-
     marginBottom: "12px",
-
     fontWeight: "500",
   },
 
   sliderWrapper: {
-
     display: "flex",
-
     alignItems: "center",
-
     gap: "12px",
-
     marginBottom: "24px",
   },
 
   sliderEmoji: {
-
     fontSize: "22px",
   },
 
   slider: {
     width: "100%",
-
     accentColor: "#6366f1",
-
     cursor: "pointer",
   },
 
   question: {
-
     textAlign: "center",
-
     lineHeight: "1.7",
-
     color: "#475569",
-
     fontSize: "15px",
-
     marginBottom: "20px",
   },
 
   textarea: {
-
     width: "100%",
-
     minHeight: "130px",
-
     borderRadius: "22px",
-
-    border:
-      "1px solid #dbeafe",
-
+    border: "1px solid #dbeafe",
     padding: "16px",
-
     background: "#fff",
-
     color: "#0f172a",
-
     resize: "none",
-
     fontSize: "15px",
-
     outline: "none",
-
     boxSizing: "border-box",
-
-    boxShadow:
-      "inset 0 2px 6px rgba(0,0,0,0.04)",
+    boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
   },
 
   button: {
-
     width: "100%",
     marginTop: "22px",
     marginBottom: "100px",
     padding: "16px",
     border: "none",
     borderRadius: "20px",
-    background:
-      "linear-gradient(135deg,#6366f1,#8b5cf6)",
-
+    background: "linear-gradient(135deg,#6366f1,#8b5cf6)",
     color: "white",
-
     fontWeight: "700",
-
     fontSize: "16px",
-
     cursor: "pointer",
-
-    boxShadow:
-      "0 12px 30px rgba(99,102,241,.35)",
-
+    boxShadow: "0 12px 30px rgba(99,102,241,.35)",
     transition: ".3s",
   },
 };
