@@ -401,63 +401,42 @@ export default function Admin({ allData }) {
             <b>Cerita:</b>{" "}
             {item.note}
           </p>
+            {!item.reply ? (
 
-          <textarea
-  placeholder={
-    item.reply
-      ? "Already replied"
-      : "Send Reply"
-  }
-  value={
-    item.reply ||
-    replyMap[item.id] ||
-    ""
-  }
-  disabled={!!item.reply}
-  onChange={(e) =>
-    setReplyMap({
-      ...replyMap,
-      [item.id]:
-        e.target.value,
-    })
-  }
-  style={{
-    ...styles.textarea,
+  <>
+    <textarea
+      placeholder="Send Reply"
+      value={
+        replyMap[item.id] || ""
+      }
+      onChange={(e) =>
+        setReplyMap({
+          ...replyMap,
+          [item.id]:
+            e.target.value,
+        })
+      }
+      style={styles.textarea}
+    />
 
-    background:
-      item.reply
-        ? "#e2e8f0"
-        : "white",
+    <button
+      onClick={() =>
+        sendReply(item)
+      }
+      style={styles.button}
+    >
+      Send Reply
+    </button>
+  </>
 
-    cursor:
-      item.reply
-        ? "not-allowed"
-        : "text",
-  }}
-/>
+) : (
 
-<button
-  onClick={() =>
-    sendReply(item)
-  }
-  disabled={!!item.reply}
-  style={{
-    ...styles.button,
+  <div style={styles.repliedBadge}>
+    ✅✅ Already Replied
+  </div>
 
-    opacity:
-      item.reply ? 0.5 : 1,
-
-    cursor:
-      item.reply
-        ? "not-allowed"
-        : "pointer",
-  }}
->
-  {item.reply
-    ? "Already Replied"
-    : "Send Reply"}</button>
-
-          {item.reply && (
+)}
+             {item.reply && (
 
             <div style={styles.replyBox}>
 
@@ -615,5 +594,23 @@ const styles = {
     "linear-gradient(135deg,#eff6ff,#dbeafe)",
 
   color: "#000",
+},
+repliedBadge: {
+
+  marginTop: "14px",
+
+  padding: "10px 14px",
+
+  borderRadius: "14px",
+
+  background: "#dcfce7",
+
+  color: "#166534",
+
+  fontWeight: "700",
+
+  fontSize: "14px",
+
+  display: "inline-block",
 },
 };

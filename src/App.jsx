@@ -370,10 +370,17 @@ if (!user) {
   return (
     <div
   style={{
-      minHeight: "100vh",
-      background: "#f4f6f8",
-      overflowX: "hidden",
-    }}
+    minHeight: "100vh",
+
+    background:
+      "linear-gradient(180deg,#2c7873 0%, #f89849 100%)",
+    
+    backdropFilter: "blur(18px)",
+
+    backgroundAttachment: "fixed",
+
+    overflowX: "hidden",
+  }}
 >
 
       {/* CONTENT */}
