@@ -33,7 +33,7 @@ export default function App() {
   // =========================
   const [user, setUser] = useState(null);
 
-  const [menu, setMenu] = useState("home");
+  const [menu, setMenu] = useState(localStorage.getItem("menu") || "home");
 
   const [mood, setMood] = useState("");
 
@@ -51,7 +51,14 @@ export default function App() {
 
   // =========================
   // SAVE MENU
- 
+ useEffect(() => {
+
+  localStorage.setItem(
+    "menu",
+    menu
+  );
+
+}, [menu]);
   // =========================
   // ADMIN
   // =========================
@@ -97,13 +104,6 @@ export default function App() {
   );
 };
 
-  const res = await signInWithPopup(
-    auth,
-    provider
-  );
-
-  setUser(res.user);
-};
 
   // =========================
   // LOGOUT
