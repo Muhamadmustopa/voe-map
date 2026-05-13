@@ -44,7 +44,7 @@ export default function Admin({ allData }) {
   );
 
   // =========================
-  // DATE FORMAT
+  // FORMAT DATE
   // =========================
   const formatDate = (timestamp) => {
 
@@ -77,14 +77,12 @@ export default function Admin({ allData }) {
   const filteredData = allData.filter(
     (item) => {
 
-      // FILTER CATEGORY
       const categoryMatch =
         selectedCategory === "all"
           ? true
           : item.category ===
             selectedCategory;
 
-      // FILTER DATE
       let dateMatch = true;
 
       if (item.createdAt) {
@@ -133,63 +131,34 @@ export default function Admin({ allData }) {
       );
 
       await updateDoc(docRef, {
-
         reply: replyMap[item.id],
-
         status: "replied",
-
         replyAt: serverTimestamp(),
-
         replyRead: false,
       });
 
-      // EMAIL
-      try {
+      // EMAILJS
+      await emailjs.send(
+        "service_9e912oa",
+        "template_n5ncvx4",
+        {
+          to_email: item.email,
+          mood: item.mood,
+          note: item.note,
+          reply: replyMap[item.id],
+        },
+        "mACZL1JrwWfQc1NAY"
+      );
 
-        const sendReply = async (item) => {
+      alert("Reply berhasil dikirim");
 
-  try {
+    } catch (err) {
 
-    if (!replyMap[item.id]) {
-      alert("Isi balasan dulu");
-      return;
+      console.log(err);
+
+      alert("Gagal kirim reply");
     }
-
-    const docRef = doc(
-      db,
-      "moods",
-      item.id
-    );
-
-    await updateDoc(docRef, {
-      reply: replyMap[item.id],
-      status: "replied",
-      replyAt: serverTimestamp(),
-      replyRead: false,
-    });
-
-    // EMAILJS
-    await emailjs.send(
-      "service_9e912oa",
-      "template_n5ncvx4",
-      {
-        to_email: item.email,
-        mood: item.mood,
-        note: item.note,
-        reply: replyMap[item.id],
-      },
-      "mACZL1JrwWfQc1NAY"
-    );
-
-    alert("Reply berhasil dikirim");
-
-  } catch (err) {
-
-    console.log(err);
-
-    alert("Gagal kirim reply");
-  }
-};
+  };
 
   // =========================
   // EXPORT EXCEL
@@ -243,9 +212,7 @@ export default function Admin({ allData }) {
 
     const excelBuffer =
       XLSX.write(workbook, {
-
         bookType: "xlsx",
-
         type: "array",
       });
 
@@ -270,7 +237,7 @@ export default function Admin({ allData }) {
         📊 Dashboard Mood Share
       </h2>
 
-      {/* FILTER AREA */}
+      {/* FILTER */}
       <div style={styles.filterBox}>
 
         <select
@@ -387,10 +354,6 @@ export default function Admin({ allData }) {
       </div>
 
       {/* LIST */}
-      <h3 style={{ color: "#0f172a" }}>
-        📋 Semua Laporan
-      </h3>
-
       {filteredData.map((item) => (
 
         <div
@@ -426,15 +389,12 @@ export default function Admin({ allData }) {
 
           <p style={styles.text}>
             <b>Status:</b>{" "}
-            {item.status ||
-              "pending"}
+            {item.status || "pending"}
           </p>
 
           <p style={styles.text}>
             <b>Tanggal:</b>{" "}
-            {formatDate(
-              item.createdAt
-            )}
+            {formatDate(item.createdAt)}
           </p>
 
           <p style={styles.text}>
@@ -443,29 +403,59 @@ export default function Admin({ allData }) {
           </p>
 
           <textarea
-            placeholder="Tulis balasan..."
-            value={
-              replyMap[item.id] || ""
-            }
-            onChange={(e) =>
-              setReplyMap({
-                ...replyMap,
+  placeholder={
+    item.reply
+      ? "Already replied"
+      : "Send Reply"
+  }
+  value={
+    item.reply ||
+    replyMap[item.id] ||
+    ""
+  }
+  disabled={!!item.reply}
+  onChange={(e) =>
+    setReplyMap({
+      ...replyMap,
+      [item.id]:
+        e.target.value,
+    })
+  }
+  style={{
+    ...styles.textarea,
 
-                [item.id]:
-                  e.target.value,
-              })
-            }
-            style={styles.textarea}
-          />
+    background:
+      item.reply
+        ? "#e2e8f0"
+        : "white",
 
-          <button
-            onClick={() =>
-              sendReply(item)
-            }
-            style={styles.button}
-          >
-            Kirim Reply
-          </button>
+    cursor:
+      item.reply
+        ? "not-allowed"
+        : "text",
+  }}
+/>
+
+<button
+  onClick={() =>
+    sendReply(item)
+  }
+  disabled={!!item.reply}
+  style={{
+    ...styles.button,
+
+    opacity:
+      item.reply ? 0.5 : 1,
+
+    cursor:
+      item.reply
+        ? "not-allowed"
+        : "pointer",
+  }}
+>
+  {item.reply
+    ? "Already Replied"
+    : "Send Reply"}</button>
 
           {item.reply && (
 
@@ -475,7 +465,7 @@ export default function Admin({ allData }) {
                 HRDGA Reply:
               </b>
 
-              <p>{item.reply}</p>
+              <p style={{ color: "#000" }}>{item.reply}</p>
 
             </div>
           )}
@@ -487,9 +477,6 @@ export default function Admin({ allData }) {
   );
 }
 
-// =========================
-// BOX
-// =========================
 function Box({
   title,
   value,
@@ -527,193 +514,106 @@ function Box({
   );
 }
 
-// =========================
-// STYLES
-// =========================
 const styles = {
 
   filterBox: {
-
     background:
       "rgba(255,255,255,0.75)",
-
     padding: "14px",
-
     borderRadius: "22px",
-
     marginBottom: "18px",
-
-    backdropFilter:
-      "blur(20px)",
-
-    boxShadow:
-      "0 8px 25px rgba(0,0,0,0.08)",
   },
 
   select: {
-
     width: "100%",
-
     padding: "12px",
-
     borderRadius: "14px",
-
-    border:
-      "1px solid #cbd5e1",
-
+    border: "1px solid #cbd5e1",
     marginBottom: "10px",
-
-    outline: "none",
   },
 
   dateRow: {
-
     display: "flex",
-
     gap: "10px",
-
     marginBottom: "10px",
   },
 
   dateInput: {
-
     flex: 1,
-
     padding: "12px",
-
     borderRadius: "14px",
-
-    border:
-      "1px solid #cbd5e1",
-
-    outline: "none",
+    border: "1px solid #cbd5e1",
   },
 
   exportButton: {
-
     width: "100%",
-
     padding: "13px",
-
     border: "none",
-
     borderRadius: "14px",
-
     background:
       "linear-gradient(135deg,#10b981,#059669)",
-
     color: "white",
-
     fontWeight: "700",
-
-    cursor: "pointer",
   },
 
   summary: {
-
     display: "flex",
-
     gap: "10px",
-
     margin: "18px 0",
   },
 
   box: {
-
     flex: 1,
-
     padding: "14px",
-
     borderRadius: "18px",
-
     textAlign: "center",
-
     border: "2px solid",
-
     cursor: "pointer",
-
-    transition: ".25s",
   },
 
   card: {
-
     background:
       "rgba(255,255,255,0.78)",
-
     padding: "18px",
-
     marginTop: "18px",
-
     borderRadius: "22px",
-
-    backdropFilter:
-      "blur(20px)",
-
-    boxShadow:
-      "0 8px 25px rgba(0,0,0,0.08)",
   },
 
   text: {
-
     color: "#334155",
-
     marginBottom: "8px",
   },
 
   textarea: {
-
     width: "100%",
-
     minHeight: "90px",
-
     marginTop: "14px",
-
     padding: "14px",
-
     borderRadius: "16px",
-
-    border:
-      "1px solid #cbd5e1",
-
+    border: "1px solid #cbd5e1",
     resize: "none",
-
     boxSizing: "border-box",
   },
 
   button: {
-
     width: "100%",
-
     marginTop: "14px",
-
     padding: "14px",
-
     borderRadius: "16px",
-
     border: "none",
-
     background:
       "linear-gradient(135deg,#6366f1,#8b5cf6)",
-
     color: "white",
-
     fontWeight: "700",
-
-    cursor: "pointer",
   },
 
   replyBox: {
+  marginTop: "14px",
+  padding: "14px",
+  borderRadius: "16px",
+  background:
+    "linear-gradient(135deg,#eff6ff,#dbeafe)",
 
-    marginTop: "14px",
-
-    padding: "14px",
-
-    borderRadius: "16px",
-
-    background:
-      "linear-gradient(135deg,#eff6ff,#dbeafe)",
-
-    border:
-      "1px solid #bfdbfe",
-  },
+  color: "#000",
+},
 };

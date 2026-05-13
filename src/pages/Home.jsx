@@ -38,7 +38,12 @@ export default function Home({
       <div style={styles.card}>
 
         {/* EMOJI */}
-        <div style={styles.emoji}>
+        <div
+          style={{
+            ...styles.emoji,
+            transform: `translateX(${(moodValue - 2) * 20}px) scale(${1 + moodValue * 0.05})`,
+          }}
+        >
           {moodData.emoji}
         </div>
 
@@ -47,30 +52,46 @@ export default function Home({
           {moodData.label}
         </h2>
 
+        {/* TEXT SLIDER */}
+        <p style={styles.sliderText}>
+          Geser untuk menunjukan
+          perasaan kamu hari ini
+        </p>
+
         {/* SLIDER */}
-        <input
-          type="range"
-          min="1"
-          max="3"
-          value={moodValue}
-          onChange={(e) => {
+        <div style={styles.sliderWrapper}>
 
-            const val = Number(e.target.value);
+          <span style={styles.sliderEmoji}></span>
 
-            setMoodValue(val);
+          <input
+            type="range"
+            min="1"
+            max="3"
+            step="1"
+            value={moodValue}
+            onChange={(e) => {
 
-            setMood(
-              getMoodData(val).label
-            );
-          }}
-          style={styles.slider}
-        />
+              const val =
+                Number(e.target.value);
+
+              setMoodValue(val);
+
+              setMood(
+                getMoodData(val).label
+              );
+            }}
+            style={styles.slider}
+          />
+
+          <span style={styles.sliderEmoji}></span>
+        </div>
 
         {/* QUESTION */}
         <p style={styles.question}>
           Ceritakan perasaan,
-          saran, atau keluhan
-          kamu tentang lingkungan kerja kita ya..,
+          saran masukan atau keluhan
+          kamu tentang lingkungan
+          kerja kita ya..
         </p>
 
         {/* TEXTAREA */}
@@ -165,8 +186,11 @@ const styles = {
   },
 
   emoji: {
-    fontSize: "85px",
+    fontSize: "90px",
     textAlign: "center",
+
+    transition:
+      "all .35s ease",
   },
 
   moodLabel: {
@@ -174,7 +198,7 @@ const styles = {
     textAlign: "center",
 
     marginTop: "10px",
-    marginBottom: "20px",
+    marginBottom: "16px",
 
     fontSize: "28px",
 
@@ -183,11 +207,41 @@ const styles = {
     fontWeight: "700",
   },
 
+  sliderText: {
+
+    textAlign: "center",
+
+    fontSize: "13px",
+
+    color: "#64748b",
+
+    marginBottom: "12px",
+
+    fontWeight: "500",
+  },
+
+  sliderWrapper: {
+
+    display: "flex",
+
+    alignItems: "center",
+
+    gap: "12px",
+
+    marginBottom: "24px",
+  },
+
+  sliderEmoji: {
+
+    fontSize: "22px",
+  },
+
   slider: {
     width: "100%",
-    marginBottom: "25px",
 
     accentColor: "#6366f1",
+
+    cursor: "pointer",
   },
 
   question: {
