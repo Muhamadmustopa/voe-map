@@ -4,6 +4,7 @@ import { auth, provider, db } from "./firebase";
 import {
   signInWithPopup,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 import {
@@ -42,11 +43,15 @@ export default function App() {
 
   const [allData, setAllData] = useState([]);
 
-  const [moodValue, setMoodValue] = useState(2);
+  const [moodValue, setMoodValue] =
+    useState(2);
 
   const [showLogoutModal, setShowLogoutModal] =
     useState(false);
 
+  // =========================
+  // SAVE MENU
+ 
   // =========================
   // ADMIN
   // =========================
@@ -85,6 +90,12 @@ export default function App() {
   provider.setCustomParameters({
     prompt: "select_account",
   });
+
+  await signInWithPopup(
+    auth,
+    provider
+  );
+};
 
   const res = await signInWithPopup(
     auth,
@@ -186,6 +197,20 @@ export default function App() {
     alert("Data berhasil dikirim");
   };
 
+  useEffect(() => {
+
+  const unsub =
+    onAuthStateChanged(
+      auth,
+      (currentUser) => {
+
+        setUser(currentUser);
+      }
+    );
+
+  return () => unsub();
+
+}, []);
   // =========================
   // HISTORY USER
   // =========================
