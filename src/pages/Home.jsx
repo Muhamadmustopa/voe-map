@@ -234,7 +234,6 @@ const styles = {
   button: {
     width: "100%",
     marginTop: "22px",
-    marginBottom: "100px",
     padding: "16px",
     border: "none",
     borderRadius: "20px",

@@ -364,6 +364,10 @@ if (!user) {
       item.reply &&
       !item.replyRead
   ).length;
+  const pendingCount = allData.filter(
+  (item) =>
+    item.status !== "replied"
+).length;
   // =========================
   // MAIN APP
   // =========================
@@ -387,7 +391,10 @@ if (!user) {
       <div
   style={{
     padding: 20,
-    paddingBottom: "160px",
+    paddingBottom:
+      window.innerWidth <= 768
+        ? "140px"
+        : "90px",
   }}
 >
         {menu === "home" && (
@@ -430,10 +437,10 @@ if (!user) {
         onLogout={() =>
         setShowLogoutModal(true)
       }
-      isAdmin={isAdmin}
-      unreadInbox={unreadInbox}
-      />
-
+        isAdmin={isAdmin}
+        unreadInbox={unreadInbox}
+        pendingCount={pendingCount}
+    />
       {/* LOGOUT MODAL */}
       <LogoutModal
         show={showLogoutModal}

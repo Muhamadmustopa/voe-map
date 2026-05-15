@@ -13,7 +13,8 @@ export default function Navbar({
   onLogout,
   isAdmin,
   unreadInbox,
-}) {
+  pendingCount,
+}){
 
   return (
 
@@ -59,13 +60,14 @@ export default function Navbar({
       />
 
       {isAdmin && (
-        <NavItem
-          icon={<ShieldCheck size={22} />}
-          label="Admin"
-          active={menu === "admin"}
-          onClick={() => setMenu("admin")}
-        />
-      )}
+      <NavItem
+      icon={<ShieldCheck size={22} />}
+      label="Admin"
+      active={menu === "admin"}
+      onClick={() => setMenu("admin")}
+      badge={pendingCount}
+    />
+  )}
 
       <NavItem
         icon={<LogOut size={22} />}
@@ -83,6 +85,7 @@ function NavItem({
   label,
   active,
   onClick,
+  badge,
 }) {
 
   return (
@@ -114,7 +117,46 @@ function NavItem({
       }}
     >
 
-      {icon}
+      <div
+  style={{
+    position: "relative",
+  }}
+>
+  {icon}
+
+  {badge > 0 && (
+    <div
+      style={{
+        position: "absolute",
+        top: "-6px",
+        right: "-8px",
+
+        minWidth: "18px",
+        height: "18px",
+
+        borderRadius: "999px",
+
+        background: "#ef4444",
+
+        color: "white",
+
+        fontSize: "11px",
+
+        fontWeight: "700",
+
+        display: "flex",
+
+        alignItems: "center",
+
+        justifyContent: "center",
+
+        padding: "0 5px",
+      }}
+    >
+      {badge}
+    </div>
+  )}
+</div>
 
       <span style={styles.label}>
         {label}
