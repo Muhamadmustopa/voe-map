@@ -171,11 +171,15 @@ wrapper: {
 
   position: "fixed",
 
-  bottom: "0",
+  left: 0,
 
-  left: "0",
+  right: 0,
+
+  bottom: 0,
 
   width: "100%",
+
+  height: "78px",
 
   display: "flex",
 
@@ -183,21 +187,25 @@ wrapper: {
 
   alignItems: "center",
 
-  padding: "12px 10px calc(12px + env(safe-area-inset-bottom))",
+  paddingBottom:
+    "env(safe-area-inset-bottom)",
 
   background:
     "rgba(255,255,255,0.12)",
 
   backdropFilter:
-    "blur(20px)",
+    "blur(22px)",
+
+  WebkitBackdropFilter:
+    "blur(22px)",
 
   borderTop:
-    "1px solid rgba(255,255,255,0.15)",
+    "1px solid rgba(255,255,255,0.12)",
 
   boxShadow:
-    "0 -8px 32px rgba(0,0,0,0.15)",
+    "0 -10px 30px rgba(0,0,0,0.18)",
 
-  zIndex: 9999,
+  zIndex: 999999,
 
 },
 

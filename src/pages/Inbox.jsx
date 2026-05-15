@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Mail } from "lucide-react";
 
 import {
   doc,
@@ -93,7 +94,7 @@ export default function Inbox({
         <div style={styles.emptyCard}>
 
           <div style={styles.emptyEmoji}>
-            💬
+            <Mail size={58} />
           </div>
 
           <h3 style={styles.emptyTitle}>
@@ -236,9 +237,29 @@ const styles = {
   },
 
   emptyEmoji: {
-    fontSize: "70px",
-    marginBottom: "15px",
-  },
+
+  width: "90px",
+
+  height: "90px",
+
+  margin: "0 auto 18px",
+
+  borderRadius: "50%",
+
+  display: "flex",
+
+  alignItems: "center",
+
+  justifyContent: "center",
+
+  background:
+    "linear-gradient(135deg,#dbeafe,#bfdbfe)",
+
+  color: "#2563eb",
+
+  boxShadow:
+    "0 10px 25px rgba(37,99,235,.18)",
+},
 
   emptyTitle: {
     color: "#0f172a",
