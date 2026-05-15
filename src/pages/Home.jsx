@@ -37,7 +37,7 @@ export default function Home({
 
       {/* MAIN CARD */}
       <div style={styles.card}>
-        <h2 style={styles.userName}> Hi, {user?.displayName} 👋</h2>
+        <h2 style={styles.userName}> Hallo, {user?.displayName} 👋</h2>
 
         {/* EMOJI */}
         <div
@@ -57,7 +57,7 @@ export default function Home({
 
         {/* TEXT SLIDER */}
         <p style={styles.sliderText}>
-          Geser untuk menunjukan perasaan kamu hari ini
+          Geser untuk menunjukkan suasana hatimu hari ini. Perasaanmu penting.
         </p>
 
         {/* SLIDER */}

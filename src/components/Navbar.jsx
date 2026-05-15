@@ -167,19 +167,22 @@ function NavItem({
 }
 
 const styles = {
+
 wrapper: {
 
   position: "fixed",
 
-  left: 0,
+  left: "50%",
 
-  right: 0,
+  transform: "translateX(-50%)",
 
-  bottom: 0,
+  bottom: "12px",
 
-  width: "100%",
+  width: "calc(100% - 24px)",
 
-  height: "78px",
+  maxWidth: "406px",
+
+  height: "74px",
 
   display: "flex",
 
@@ -187,11 +190,10 @@ wrapper: {
 
   alignItems: "center",
 
-  paddingBottom:
-    "env(safe-area-inset-bottom)",
+  borderRadius: "24px",
 
   background:
-    "rgba(255,255,255,0.12)",
+    "rgba(255,255,255,0.14)",
 
   backdropFilter:
     "blur(22px)",
@@ -199,16 +201,14 @@ wrapper: {
   WebkitBackdropFilter:
     "blur(22px)",
 
-  borderTop:
+  border:
     "1px solid rgba(255,255,255,0.12)",
 
   boxShadow:
-    "0 -10px 30px rgba(0,0,0,0.18)",
+    "0 8px 32px rgba(0,0,0,0.18)",
 
   zIndex: 999999,
-
 },
-
   item: {
 
   display: "flex",

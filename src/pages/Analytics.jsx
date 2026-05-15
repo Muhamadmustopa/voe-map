@@ -80,7 +80,7 @@ export default function Analytics({ history }) {
       <div style={styles.header}>
 
         <h1 style={styles.title}>
-          📊 Analytics
+          📊Mood Analytics
         </h1>
 
         <p style={styles.subtitle}>
@@ -106,8 +106,8 @@ export default function Analytics({ history }) {
       <div style={styles.chartCard}>
 
         <h3 style={styles.chartTitle}>
-          Mood Distribution
-        </h3>
+          Senang mendengar harimu berjalan baik 
+          Pertahankan energi positifmu, dan jangan lupa istirahat yang cukup ya.</h3>
 
         <ResponsiveContainer
           width="100%"
@@ -242,7 +242,45 @@ export default function Analytics({ history }) {
         </div>
 
       </div>
+      
+      {/* WELLNESS TIPS */}
+<div style={styles.tipsCard}>
 
+  <h3 style={styles.tipsTitle}>
+    ✨ Yang bisa kamu coba hari ini
+  </h3>
+
+  <div style={styles.tipItem}>
+    <span style={styles.tipEmoji}>
+      💧
+    </span>
+
+    <p style={styles.tipText}>
+      Minum air putih yang cukup
+    </p>
+  </div>
+
+  <div style={styles.tipItem}>
+    <span style={styles.tipEmoji}>
+      ⭐
+    </span>
+
+    <p style={styles.tipText}>
+      Bersyukur atas hal-hal kecil
+    </p>
+  </div>
+
+  <div style={styles.tipItem}>
+    <span style={styles.tipEmoji}>
+      💖
+    </span>
+
+    <p style={styles.tipText}>
+      Luangkan waktu untuk diri sendiri
+    </p>
+  </div>
+
+</div>
     </div>
   );
 }
@@ -347,7 +385,7 @@ const styles = {
 
     padding: "20px",
 
-    marginBottom: "100px",
+    marginBottom: "18px",
 
     boxShadow:
       "0 10px 30px rgba(0,0,0,0.08)",
@@ -389,4 +427,60 @@ const styles = {
 
     fontSize: "14px",
   },
+  tipsCard: {
+
+  marginTop: "10px",
+
+  background:
+    "rgba(255,255,255,0.72)",
+
+  backdropFilter:
+    "blur(20px)",
+
+  borderRadius: "28px",
+
+  padding: "22px",
+
+  boxShadow:
+    "0 10px 35px rgba(0,0,0,0.08)",
+},
+
+tipsTitle: {
+
+  color: "#0f172a",
+
+  fontSize: "20px",
+
+  fontWeight: "800",
+
+  marginBottom: "8px",
+},
+
+tipItem: {
+
+  display: "flex",
+
+  alignItems: "center",
+
+  gap: "14px",
+
+  padding: "14px 0",
+
+  borderBottom:
+    "1px solid rgba(0,0,0,0.06)",
+},
+
+tipEmoji: {
+
+  fontSize: "28px",
+},
+
+tipText: {
+
+  color: "#334155",
+
+  fontSize: "15px",
+
+  fontWeight: "500",
+},
 };

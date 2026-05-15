@@ -102,9 +102,7 @@ export default function Inbox({
           </h3>
 
           <p style={styles.emptyText}>
-            Admin akan membalas
-            laporan kamu disini
-          </p>
+            Feedback-mu sudah kami terima. Kami akan senantiasa berupaya terbaik menindaklanjuti feedback yang kamu sampaikan untuk kebaikan bersama.</p>
 
         </div>
       )}

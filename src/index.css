@@ -72,14 +72,14 @@ textarea{
 
   margin:auto;
 
-  position:relative;
+  min-height:100vh;
 
   background:
   linear-gradient(
-    180deg,
-    rgba(255,255,255,0.05),
-    rgba(255,255,255,0.02)
-  );
+  180deg,
+  #2c7873 0%,
+  #004445 100%
+);
 
   backdrop-filter:blur(20px);
 }
