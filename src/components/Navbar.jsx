@@ -172,17 +172,19 @@ wrapper: {
 
   position: "fixed",
 
-  left: "50%",
+  bottom: 0,
 
-  transform: "translateX(-50%)",
+  left: 0,
 
-  bottom: "12px",
+  right: 0,
 
-  width: "calc(100% - 24px)",
+  margin: "0 auto",
 
-  maxWidth: "406px",
+  width: "100%",
 
-  height: "74px",
+  maxWidth: "430px",
+
+  height: "78px",
 
   display: "flex",
 
@@ -190,22 +192,19 @@ wrapper: {
 
   alignItems: "center",
 
-  borderRadius: "24px",
-
   background:
     "rgba(255,255,255,0.14)",
 
-  backdropFilter:
-    "blur(22px)",
+  backdropFilter: "blur(18px)",
 
   WebkitBackdropFilter:
-    "blur(22px)",
+    "blur(18px)",
 
-  border:
+  borderTop:
     "1px solid rgba(255,255,255,0.12)",
 
   boxShadow:
-    "0 8px 32px rgba(0,0,0,0.18)",
+    "0 -10px 30px rgba(0,0,0,0.18)",
 
   zIndex: 999999,
 },

@@ -371,30 +371,34 @@ if (!user) {
   // =========================
   // MAIN APP
   // =========================
-  return (
-    <div
-  style={{
-    minHeight: "100vh",
 
-    background:
-      "linear-gradient(180deg,#2c7873 0%, #f89849 100%)",
-    
-    backdropFilter: "blur(18px)",
+    return (
+  <div
+    style={{
+      minHeight: "100vh",
 
-    backgroundAttachment: "fixed",
+      width: "100%",
 
-    overflowX: "hidden",
-  }}
->
+      maxWidth: "430px",
+
+      margin: "0 auto",
+
+      position: "relative",
+
+      background:
+        "linear-gradient(180deg,#2c7873 0%, #f89849 100%)",
+
+      overflowX: "hidden",
+
+      paddingBottom: "90px",
+    }}
+  >
 
       {/* CONTENT */}
       <div
   style={{
     padding: 20,
-    paddingBottom:
-      window.innerWidth <= 768
-        ? "140px"
-        : "90px",
+    paddingBottom: "110px",
   }}
 >
         {menu === "home" && (
