@@ -1,3 +1,4 @@
+import { useState } from "react";
 export default function Home({
   user,
   mood,
@@ -8,6 +9,8 @@ export default function Home({
   setNote,
   submitData,
 }) {
+  const [showPopup, setShowPopup] =
+  useState(false);
 
   const getMoodData = (value) => {
     if (value <= 33) {
@@ -103,13 +106,50 @@ export default function Home({
 
         {/* BUTTON */}
         <button
-          onClick={submitData}
-          style={styles.button}
-        >
-          Submit!
-        </button>
+  onClick={async () => {
 
+    await submitData();
+
+    setShowPopup(true);
+
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 3500);
+
+  }}
+  style={styles.button}
+>
+  Submit!
+</button>
       </div>
+      {/* SUCCESS POPUP */}
+{showPopup && (
+
+  <div
+    onClick={() =>
+      setShowPopup(false)
+    }
+    style={styles.popupOverlay}
+  >
+
+    <div style={styles.popupCard}>
+
+      <div style={styles.popupIcon}>
+        ✅
+      </div>
+
+      <h2 style={styles.popupTitle}>
+        Feedback Terkirim
+      </h2>
+
+      <p style={styles.popupText}>
+        Terima kasih sudah berbagi cerita dan masukan hari ini. Semoga harimu menyenangkan!
+      </p>
+
+    </div>
+
+  </div>
+)}
     </div>
   );
 }
@@ -245,4 +285,78 @@ const styles = {
     boxShadow: "0 12px 30px rgba(99,102,241,.35)",
     transition: ".3s",
   },
+  popupOverlay: {
+
+  position: "fixed",
+
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+
+  background:
+    "rgba(15,23,42,0.45)",
+
+  backdropFilter: "blur(6px)",
+
+  display: "flex",
+
+  justifyContent: "center",
+
+  alignItems: "center",
+
+  zIndex: 999999,
+},
+
+popupCard: {
+
+  width: "85%",
+
+  maxWidth: "320px",
+
+  background:
+    "rgba(255,255,255,0.88)",
+
+  backdropFilter:
+    "blur(20px)",
+
+  borderRadius: "30px",
+
+  padding: "30px 24px",
+
+  textAlign: "center",
+
+  boxShadow:
+    "0 20px 45px rgba(0,0,0,0.15)",
+
+  animation:
+    "popupShow .25s ease",
+},
+
+popupIcon: {
+
+  fontSize: "64px",
+
+  marginBottom: "12px",
+},
+
+popupTitle: {
+
+  fontSize: "24px",
+
+  fontWeight: "800",
+
+  color: "#0f172a",
+
+  marginBottom: "10px",
+},
+
+popupText: {
+
+  color: "#475569",
+
+  lineHeight: "1.6",
+
+  fontSize: "14px",
+},
 };

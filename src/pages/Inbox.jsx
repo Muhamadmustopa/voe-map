@@ -94,8 +94,15 @@ export default function Inbox({
         <div style={styles.emptyCard}>
 
           <div style={styles.emptyEmoji}>
-            <Mail size={58} />
-          </div>
+    <img  src="/env.png"
+          alt="Inbox Empty"
+          style={{
+          width: "120px",
+          height: "120px",
+          objectFit: "contain",
+        }}
+      />
+  </div>
 
           <h3 style={styles.emptyTitle}>
             Belum ada balasan
@@ -236,29 +243,14 @@ const styles = {
 
   emptyEmoji: {
 
-  width: "90px",
-
-  height: "90px",
-
-  margin: "0 auto 18px",
-
-  borderRadius: "50%",
+  margin: "0 auto 10px",
 
   display: "flex",
 
   alignItems: "center",
 
   justifyContent: "center",
-
-  background:
-    "linear-gradient(135deg,#dbeafe,#bfdbfe)",
-
-  color: "#2563eb",
-
-  boxShadow:
-    "0 10px 25px rgba(37,99,235,.18)",
 },
-
   emptyTitle: {
     color: "#0f172a",
     marginBottom: "10px",

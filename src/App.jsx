@@ -193,8 +193,6 @@ export default function App() {
   });
 
     setNote("");
-
-    alert("Data berhasil dikirim");
   };
 
   useEffect(() => {
@@ -421,7 +419,9 @@ if (!user) {
 
         {menu === "analytics" && (
          <Analytics
-          history={isAdmin? allData: history} />
+          history={isAdmin ? allData : history}
+          isAdmin={isAdmin}
+          />
         )}
 
         {menu === "inbox" && (

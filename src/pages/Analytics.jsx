@@ -11,7 +11,10 @@ import {
   Bar,
 } from "recharts";
 
-export default function Analytics({ history }) {
+export default function Analytics({
+  history,
+  isAdmin,
+}) {
 
   // =========================
   // TOTAL MOOD
@@ -145,50 +148,196 @@ export default function Analytics({ history }) {
       </div>
 
       {/* BAR CHART */}
-      <div style={styles.chartCard}>
+      {/* USER VIEW */}
+{!isAdmin && (
 
-        <h3 style={styles.chartTitle}>
-          Favorite Emoji
-        </h3>
+<div style={styles.chartCard}>
 
-        <ResponsiveContainer
-          width="100%"
-          height={260}
-        >
+  <h3 style={styles.chartTitle}>
+    Perjalanan Mood Kamu
+  </h3>
 
-          <BarChart data={barData}>
+  <ResponsiveContainer
+    width="100%"
+    height={280}
+  >
 
-            <CartesianGrid
-              strokeDasharray="3 3"
-            />
+    <BarChart
+      data={barData}
+      barCategoryGap="35%"
+    >
 
-            <XAxis dataKey="mood" />
+      <CartesianGrid
+        strokeDasharray="4 4"
+        vertical={false}
+        stroke="rgba(0,0,0,0.06)"
+      />
 
-            <YAxis allowDecimals={false} /> 
+      <XAxis
+        dataKey="mood"
+        tick={{ fontSize: 26 }}
+        axisLine={false}
+        tickLine={false}
+      />
 
-            <Tooltip />
+      <YAxis
+  axisLine={false}
+  tickLine={false}
 
-            <Bar
-              dataKey="total"
-              radius={[10,10,0,0]}
-            >
+  ticks={[1,2,3]}
 
-              {barData.map((entry, index) => (
+  tick={{
+    fontSize: 13,
+    fill: "#64748b",
+    fontWeight: 600,
+  }}
 
-                <Cell
-                  key={index}
-                  fill={COLORS[index]}
-                />
+  tickFormatter={(value) => {
 
-              ))}
+    if (value === 1)
+      return "Low";
 
-            </Bar>
+    if (value === 2)
+      return "Normal";
 
-          </BarChart>
+    if (value === 3)
+      return "High";
 
-        </ResponsiveContainer>
+    return value;
+  }}
+/>
 
-      </div>
+      <Tooltip />
+
+      <Bar
+        dataKey="total"
+        radius={[18,18,0,0]}
+      >
+
+        {barData.map((entry, index) => (
+
+          <Cell
+            key={index}
+            fill={COLORS[index]}
+          />
+
+        ))}
+
+      </Bar>
+
+    </BarChart>
+
+  </ResponsiveContainer>
+
+</div>
+)}
+
+{/* ADMIN VIEW */}
+{isAdmin && (
+
+<div style={styles.chartCard}>
+
+  <h3 style={styles.chartTitle}>
+    Employee Mood Overview
+  </h3>
+
+  {/* UNHAPPY */}
+  <div style={styles.progressItem}>
+
+    <div style={styles.progressTop}>
+      <span>😢 Unhappy</span>
+      <span>
+  {Math.round(
+    (unhappy / history.length) * 100
+  ) || 0}%
+</span>
+    </div>
+
+    <div style={styles.progressBg}>
+      <div
+        style={{
+          ...styles.progressFill,
+          width: `${
+            history.length
+              ? (unhappy / history.length) * 100
+              : 0
+          }%`,
+          background:
+          "linear-gradient(90deg,#ef4444,#f87171)",
+
+          boxShadow:
+          "0 0 18px rgba(239,68,68,.45)",
+        }}
+      />
+    </div>
+
+  </div>
+
+  {/* NORMAL */}
+  <div style={styles.progressItem}>
+
+    <div style={styles.progressTop}>
+      <span>🙂 Normal</span>
+      <span>
+  {Math.round(
+    (normal / history.length) * 100
+  ) || 0}%
+</span>
+    </div>
+
+    <div style={styles.progressBg}>
+      <div
+        style={{
+          ...styles.progressFill,
+          width: `${
+            history.length
+              ? (normal / history.length) * 100
+              : 0
+          }%`,
+          background:
+          "linear-gradient(90deg,#f59e0b,#fbbf24)",
+
+          boxShadow:
+          "0 0 18px rgba(245,158,11,.45)",
+        }}
+      />
+    </div>
+
+  </div>
+
+  {/* HAPPY */}
+  <div style={styles.progressItem}>
+
+    <div style={styles.progressTop}>
+      <span>😄 Happy</span>
+      <span>
+      {Math.round(
+      (happy / history.length) * 100
+      ) || 0}%</span>
+    </div>
+
+    <div style={styles.progressBg}>
+      <div
+        style={{
+          ...styles.progressFill,
+          width: `${
+            history.length
+              ? (happy / history.length) * 100
+              : 0
+          }%`,
+          background:
+          "linear-gradient(90deg,#10b981,#34d399)",
+
+          boxShadow:
+          "0 0 18px rgba(16,185,129,.45)",
+        }}
+      />
+    </div>
+
+  </div>
+
+</div>
+)}
 
       {/* DETAIL CARD */}
       <div style={styles.detailCard}>
@@ -482,5 +631,51 @@ tipText: {
   fontSize: "15px",
 
   fontWeight: "500",
+},
+progressItem: {
+
+  marginBottom: "22px",
+},
+
+progressTop: {
+
+  display: "flex",
+
+  justifyContent: "space-between",
+
+  alignItems: "center",
+
+  marginBottom: "10px",
+
+  fontWeight: "700",
+
+  color: "#0f172a",
+
+  fontSize: "15px",
+},
+
+progressBg: {
+
+  width: "100%",
+
+  height: "18px",
+
+  background: "rgba(0,0,0,0.06)",
+
+  borderRadius: "999px",
+
+  overflow: "hidden",
+
+  boxShadow:
+    "inset 0 2px 6px rgba(0,0,0,0.06)",
+},
+
+progressFill: {
+
+  height: "100%",
+
+  borderRadius: "999px",
+
+  transition: "1s ease",
 },
 };
