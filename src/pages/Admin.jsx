@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   doc,
   updateDoc,
+  deleteDoc,
   serverTimestamp,
 } from "firebase/firestore";
 
@@ -14,21 +15,36 @@ import emailjs from "@emailjs/browser";
 
 export default function Admin({ allData }) {
 
-  const [replyMap, setReplyMap] = useState({});
-  const [selectedCategory, setSelectedCategory] =
+  const [replyMap, setReplyMap] =
+    useState({});
+
+  const [selectedCategory,
+    setSelectedCategory] =
     useState("all");
 
-  const [startDate, setStartDate] =
+  const [startDate,
+    setStartDate] =
     useState("");
 
-  const [endDate, setEndDate] =
+  const [endDate,
+    setEndDate] =
+    useState("");
+
+  const [selectedItems,
+    setSelectedItems] =
+    useState([]);
+
+  const [bulkAction,
+    setBulkAction] =
     useState("");
 
   // =========================
   // SUMMARY
   // =========================
   const needFollow = allData.filter(
-    (d) => d.category === "need_follow_up"
+    (d) =>
+      d.category ===
+      "need_follow_up"
   );
 
   const onlyText = allData.filter(
@@ -52,7 +68,8 @@ export default function Admin({ allData }) {
 
     try {
 
-      const date = timestamp.toDate();
+      const date =
+        timestamp.toDate();
 
       return date.toLocaleString(
         "id-ID",
@@ -72,10 +89,13 @@ export default function Admin({ allData }) {
   };
 
   // =========================
-  // FILTER DATA
+  // FILTER
   // =========================
-  const filteredData = allData.filter(
-    (item) => {
+  const filteredData = allData
+    .filter((item) => {
+
+      if (item.archived)
+        return false;
 
       const categoryMatch =
         selectedCategory === "all"
@@ -106,59 +126,252 @@ export default function Admin({ allData }) {
         }
       }
 
-      return categoryMatch && dateMatch;
+      return (
+        categoryMatch &&
+        dateMatch
+      );
+    })
+
+    .sort((a, b) => {
+
+      if (
+        a.pinned &&
+        !b.pinned
+      )
+        return -1;
+
+      if (
+        !a.pinned &&
+        b.pinned
+      )
+        return 1;
+
+      return 0;
+    });
+
+  // =========================
+  // SELECT ITEM
+  // =========================
+  const toggleSelect = (id) => {
+
+    if (
+      selectedItems.includes(id)
+    ) {
+
+      setSelectedItems(
+        selectedItems.filter(
+          (item) =>
+            item !== id
+        )
+      );
+
+    } else {
+
+      setSelectedItems([
+        ...selectedItems,
+        id,
+      ]);
     }
-  );
+  };
 
   // =========================
-  // SEND REPLY
+  // SELECT ALL
   // =========================
-  const sendReply = async (item) => {
+  const handleSelectAll = () => {
 
-    try {
+    if (
+      selectedItems.length ===
+      filteredData.length
+    ) {
 
-      if (!replyMap[item.id]) {
+      setSelectedItems([]);
 
-        alert("Isi balasan dulu");
+    } else {
+
+      setSelectedItems(
+        filteredData.map(
+          (item) => item.id
+        )
+      );
+    }
+  };
+
+  // =========================
+  // BULK ACTION
+  // =========================
+  const handleBulkAction =
+    async (action) => {
+
+      if (
+        selectedItems.length === 0
+      ) {
+
+        alert(
+          "Pilih data dulu"
+        );
 
         return;
       }
 
-      const docRef = doc(
-        db,
-        "moods",
-        item.id
-      );
+      try {
 
-      await updateDoc(docRef, {
-        reply: replyMap[item.id],
-        status: "replied",
-        replyAt: serverTimestamp(),
-        replyRead: false,
-      });
+        // DELETE
+        if (action === "delete") {
 
-      // EMAILJS
-      await emailjs.send(
-        "service_9e912oa",
-        "template_n5ncvx4",
-        {
-          to_email: item.email,
-          mood: item.mood,
-          note: item.note,
-          reply: replyMap[item.id],
-        },
-        "mACZL1JrwWfQc1NAY"
-      );
+          const confirmDelete =
+            window.confirm(
+              "Hapus data terpilih?"
+            );
 
-      alert("Reply berhasil dikirim");
+          if (!confirmDelete)
+            return;
 
-    } catch (err) {
+          for (const id of selectedItems) {
 
-      console.log(err);
+            await deleteDoc(
+              doc(
+                db,
+                "moods",
+                id
+              )
+            );
+          }
 
-      alert("Gagal kirim reply");
-    }
-  };
+          alert(
+            "Data berhasil dihapus"
+          );
+        }
+
+        // ARCHIVE
+        if (action === "archive") {
+
+          for (const id of selectedItems) {
+
+            await updateDoc(
+              doc(
+                db,
+                "moods",
+                id
+              ),
+              {
+                archived: true,
+              }
+            );
+          }
+
+          alert(
+            "Data berhasil diarchive"
+          );
+        }
+
+        // PIN
+        if (action === "pin") {
+
+          for (const id of selectedItems) {
+
+            await updateDoc(
+              doc(
+                db,
+                "moods",
+                id
+              ),
+              {
+                pinned: true,
+              }
+            );
+          }
+
+          alert(
+            "Data berhasil dipin"
+          );
+        }
+
+        setSelectedItems([]);
+        setBulkAction("");
+
+      } catch (err) {
+
+        console.log(err);
+
+        alert(
+          "Terjadi kesalahan"
+        );
+      }
+    };
+
+  // =========================
+  // SEND REPLY
+  // =========================
+  const sendReply =
+    async (item) => {
+
+      try {
+
+        if (
+          !replyMap[item.id]
+        ) {
+
+          alert(
+            "Isi balasan dulu"
+          );
+
+          return;
+        }
+
+        const docRef = doc(
+          db,
+          "moods",
+          item.id
+        );
+
+        await updateDoc(
+          docRef,
+          {
+            reply:
+              replyMap[item.id],
+
+            status:
+              "replied",
+
+            replyAt:
+              serverTimestamp(),
+
+            replyRead: false,
+          }
+        );
+
+        await emailjs.send(
+          "service_9e912oa",
+          "template_n5ncvx4",
+          {
+            to_email:
+              item.email,
+
+            mood:
+              item.mood,
+
+            note:
+              item.note,
+
+            reply:
+              replyMap[item.id],
+          },
+          "mACZL1JrwWfQc1NAY"
+        );
+
+        alert(
+          "Reply berhasil dikirim"
+        );
+
+      } catch (err) {
+
+        console.log(err);
+
+        alert(
+          "Gagal kirim reply"
+        );
+      }
+    };
 
   // =========================
   // EXPORT EXCEL
@@ -166,35 +379,42 @@ export default function Admin({ allData }) {
   const exportExcel = () => {
 
     const excelData =
-      filteredData.map((item) => ({
+      filteredData.map(
+        (item) => ({
 
-        Nama: item.name || "-",
+          Nama:
+            item.name || "-",
 
-        Email: item.email || "-",
+          Email:
+            item.email || "-",
 
-        Mood: item.mood || "-",
+          Mood:
+            item.mood || "-",
 
-        Kategori:
-          item.category || "-",
+          Kategori:
+            item.category || "-",
 
-        Status:
-          item.status || "pending",
+          Status:
+            item.status ||
+            "pending",
 
-        Cerita: item.note || "-",
+          Cerita:
+            item.note || "-",
 
-        Reply:
-          item.reply || "-",
+          Reply:
+            item.reply || "-",
 
-        "Tanggal Submit":
-          formatDate(
-            item.createdAt
-          ),
+          "Tanggal Submit":
+            formatDate(
+              item.createdAt
+            ),
 
-        "Tanggal Reply":
-          formatDate(
-            item.replyAt
-          ),
-      }));
+          "Tanggal Reply":
+            formatDate(
+              item.replyAt
+            ),
+        })
+      );
 
     const worksheet =
       XLSX.utils.json_to_sheet(
@@ -216,13 +436,14 @@ export default function Admin({ allData }) {
         type: "array",
       });
 
-    const fileData = new Blob(
-      [excelBuffer],
-      {
-        type:
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
-      }
-    );
+    const fileData =
+      new Blob(
+        [excelBuffer],
+        {
+          type:
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+        }
+      );
 
     saveAs(
       fileData,
@@ -303,53 +524,62 @@ export default function Admin({ allData }) {
 
       </div>
 
-      {/* SUMMARY */}
-      <div style={styles.summary}>
+      {/* ACTION BAR */}
+      <div style={styles.actionBar}>
 
-        <Box
-          title="🔴 Follow Up"
-          value={needFollow.length}
-          color="#ef4444"
-          active={
-            selectedCategory ===
-            "need_follow_up"
-          }
-          onClick={() =>
-            setSelectedCategory(
-              "need_follow_up"
-            )
-          }
-        />
+        <label style={styles.selectAll}>
+          <input
+            type="checkbox"
+            checked={
+              selectedItems.length ===
+                filteredData.length &&
+              filteredData.length > 0
+            }
+            onChange={
+              handleSelectAll
+            }
+          />
 
-        <Box
-          title="🟡 Stories"
-          value={onlyText.length}
-          color="#f59e0b"
-          active={
-            selectedCategory ===
-            "stories"
-          }
-          onClick={() =>
-            setSelectedCategory(
-              "stories"
-            )
-          }
-        />
+          Select All
+        </label>
 
-        <Box
-          title="🟢 Appreciate"
-          value={appreciation.length}
-          color="#22c55e"
-          active={
-            selectedCategory ===
-            "appreciate"
-          }
-          onClick={() =>
-            setSelectedCategory(
-              "appreciate"
-            )
-          }
-        />
+        <select
+          value={bulkAction}
+          onChange={(e) => {
+
+            const action =
+              e.target.value;
+
+            setBulkAction(
+              action
+            );
+
+            if (action) {
+              handleBulkAction(
+                action
+              );
+            }
+          }}
+          style={styles.bulkSelect}
+        >
+
+          <option value="">
+            Action
+          </option>
+
+          <option value="pin">
+            📌 Pin
+          </option>
+
+          <option value="archive">
+            📦 Archive
+          </option>
+
+          <option value="delete">
+            🗑 Delete
+          </option>
+
+        </select>
 
       </div>
 
@@ -358,21 +588,26 @@ export default function Admin({ allData }) {
 
         <div
           key={item.id}
-          style={{
-            ...styles.card,
-
-            borderLeft:
-              item.category ===
-              "need_follow_up"
-                ? "5px solid red"
-                : item.category ===
-                    "appreciate" ||
-                  item.category ===
-                    "appreciation"
-                ? "5px solid green"
-                : "5px solid orange",
-          }}
+          style={styles.card}
         >
+
+          <div style={styles.topRow}>
+
+            <input
+              type="checkbox"
+              checked={selectedItems.includes(item.id)}
+              onChange={() =>
+                toggleSelect(item.id)
+              }
+            />
+
+            {item.pinned && (
+              <span style={styles.pinText}>
+                📌 Pinned
+              </span>
+            )}
+
+          </div>
 
           <p style={styles.text}>
             <b>Nama:</b> {item.name}
@@ -401,93 +636,9 @@ export default function Admin({ allData }) {
             <b>Cerita:</b>{" "}
             {item.note}
           </p>
-            {!item.reply ? (
-
-  <>
-    <textarea
-      placeholder="Send Reply"
-      value={
-        replyMap[item.id] || ""
-      }
-      onChange={(e) =>
-        setReplyMap({
-          ...replyMap,
-          [item.id]:
-            e.target.value,
-        })
-      }
-      style={styles.textarea}
-    />
-
-    <button
-      onClick={() =>
-        sendReply(item)
-      }
-      style={styles.button}
-    >
-      Send Reply
-    </button>
-  </>
-
-) : (
-
-  <div style={styles.repliedBadge}>
-    ✅✅ Already Replied
-  </div>
-
-)}
-             {item.reply && (
-
-            <div style={styles.replyBox}>
-
-              <b>
-                HRDGA Reply:
-              </b>
-
-              <p style={{ color: "#000" }}>{item.reply}</p>
-
-            </div>
-          )}
 
         </div>
       ))}
-
-    </div>
-  );
-}
-
-function Box({
-  title,
-  value,
-  color,
-  active,
-  onClick,
-}) {
-
-  return (
-
-    <div
-      onClick={onClick}
-      style={{
-        ...styles.box,
-
-        borderColor: color,
-
-        background:
-          active
-            ? color
-            : "rgba(255,255,255,0.7)",
-
-        color:
-          active
-            ? "white"
-            : "#0f172a",
-      }}
-    >
-
-      <p>{title}</p>
-
-      <h2>{value}</h2>
 
     </div>
   );
@@ -535,19 +686,29 @@ const styles = {
     fontWeight: "700",
   },
 
-  summary: {
+  actionBar: {
     display: "flex",
-    gap: "10px",
-    margin: "18px 0",
+    justifyContent:
+      "space-between",
+    alignItems: "center",
+    background:
+      "rgba(255,255,255,0.75)",
+    padding: "14px",
+    borderRadius: "20px",
+    marginBottom: "18px",
   },
 
-  box: {
-    flex: 1,
-    padding: "14px",
-    borderRadius: "18px",
-    textAlign: "center",
-    border: "2px solid",
-    cursor: "pointer",
+  selectAll: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    fontWeight: "700",
+  },
+
+  bulkSelect: {
+    padding: "10px",
+    borderRadius: "12px",
+    border: "1px solid #cbd5e1",
   },
 
   card: {
@@ -558,59 +719,20 @@ const styles = {
     borderRadius: "22px",
   },
 
+  topRow: {
+    display: "flex",
+    justifyContent:
+      "space-between",
+    marginBottom: "10px",
+  },
+
+  pinText: {
+    color: "#eab308",
+    fontWeight: "700",
+  },
+
   text: {
     color: "#334155",
     marginBottom: "8px",
   },
-
-  textarea: {
-    width: "100%",
-    minHeight: "90px",
-    marginTop: "14px",
-    padding: "14px",
-    borderRadius: "16px",
-    border: "1px solid #cbd5e1",
-    resize: "none",
-    boxSizing: "border-box",
-  },
-
-  button: {
-    width: "100%",
-    marginTop: "14px",
-    padding: "14px",
-    borderRadius: "16px",
-    border: "none",
-    background:
-      "linear-gradient(135deg,#6366f1,#8b5cf6)",
-    color: "white",
-    fontWeight: "700",
-  },
-
-  replyBox: {
-  marginTop: "14px",
-  padding: "14px",
-  borderRadius: "16px",
-  background:
-    "linear-gradient(135deg,#eff6ff,#dbeafe)",
-
-  color: "#000",
-},
-repliedBadge: {
-
-  marginTop: "14px",
-
-  padding: "10px 14px",
-
-  borderRadius: "14px",
-
-  background: "#dcfce7",
-
-  color: "#166534",
-
-  fontWeight: "700",
-
-  fontSize: "14px",
-
-  display: "inline-block",
-},
 };
