@@ -217,36 +217,43 @@ const isAdmin =
   // =========================
   // HISTORY USER
   // =========================
-  useEffect(() => {
+  // =========================
+// HISTORY USER
+// =========================
 
-    if (!user) return;
+useEffect(() => {
 
-    const q = query(
-      collection(db, "moods"),
+  if (!user) return;
 
-      where("userId", "==", user.uid),
+  const q = query(
+    collection(db, "moods"),
+    where("userId", "==", user.uid),
+    orderBy("createdAt", "desc")
+  );
 
-      orderBy("createdAt", "desc")
-    );
+  const unsub = onSnapshot(
 
-    const unsub = onSnapshot(
-  q,
-  (snapshot) => {
+    q,
 
-    const data = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    (snapshot) => {
 
-    setAllData(data);
-  },
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-  (error) => {
-    console.error(error);
-  }
-);
+      // USER HISTORY
+      setHistory(data);
+    },
 
-  }, [user]);
+    (error) => {
+      console.error(error);
+    }
+  );
+
+  return () => unsub();
+
+}, [user]);
 
   // =========================
   // ADMIN ALL DATA
