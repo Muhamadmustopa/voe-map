@@ -1,4 +1,4 @@
-  import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { auth, provider, db } from "./firebase";
 
 import {
@@ -224,17 +224,22 @@ export default function App() {
       orderBy("createdAt", "desc")
     );
 
-    const unsub = onSnapshot(q, (snapshot) => {
+    const unsub = onSnapshot(
+  q,
+  (snapshot) => {
 
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    const data = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
 
-      setHistory(data.slice(0, 7));
-    });
+    setAllData(data);
+  },
 
-    return () => unsub();
+  (error) => {
+    console.error(error);
+  }
+);
 
   }, [user]);
 
@@ -302,8 +307,8 @@ if (!user) {
           src="/logo.png"
           alt="Company Logo"
           style={{
-            width: "90px",
-            height: "90px",
+            width: "240px",
+            height: "240px",
             objectFit: "contain",
             marginBottom: "18px",
           }}
@@ -318,7 +323,7 @@ if (!user) {
             marginBottom: "8px",
           }}
         >
-          Mind Share MAP
+          VoE MAP
         </h1>
 
         <p
@@ -330,7 +335,6 @@ if (!user) {
           }}
         >
           Employee Mood & Story Platform
-          HRDGA Internal System
         </p>
 
         {/* LOGIN BUTTON */}
@@ -456,4 +460,4 @@ if (!user) {
 
     </div>
   );
-}
+} 

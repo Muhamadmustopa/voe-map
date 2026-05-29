@@ -14,88 +14,32 @@ import { saveAs } from "file-saver";
 import emailjs from "@emailjs/browser";
 
 export default function Admin({ allData }) {
-
-  const [replyMap, setReplyMap] =
-    useState({});
-
-  const [selectedCategory,
-    setSelectedCategory] =
+  const [replyMap, setReplyMap] = useState({});
+  const [selectedCategory, setSelectedCategory] =
     useState("all");
 
-  const [startDate,
-    setStartDate] =
+  const [startDate, setStartDate] =
     useState("");
 
-  const [endDate,
-    setEndDate] =
+  const [endDate, setEndDate] =
     useState("");
 
-  const [selectedItems,
-    setSelectedItems] =
+  const [selectedItems, setSelectedItems] =
     useState([]);
 
-  const [bulkAction,
-    setBulkAction] =
+  const [bulkAction, setBulkAction] =
     useState("");
 
-  // =========================
-  // SUMMARY
-  // =========================
-  const needFollow = allData.filter(
-    (d) =>
-      d.category ===
-      "need_follow_up"
-  );
-
-  const onlyText = allData.filter(
-    (d) =>
-      d.category === "stories" ||
-      d.category === "only_text"
-  );
-
-  const appreciation = allData.filter(
-    (d) =>
-      d.category === "appreciate" ||
-      d.category === "appreciation"
-  );
-
-  // =========================
-  // FORMAT DATE
-  // =========================
-  const formatDate = (timestamp) => {
-
-    if (!timestamp) return "-";
-
-    try {
-
-      const date =
-        timestamp.toDate();
-
-      return date.toLocaleString(
-        "id-ID",
-        {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }
-      );
-
-    } catch {
-
-      return "-";
-    }
-  };
+  const [openReply, setOpenReply] =
+    useState({});
 
   // =========================
   // FILTER
   // =========================
+
   const filteredData = allData
     .filter((item) => {
-
-      if (item.archived)
-        return false;
+      if (item.archived) return false;
 
       const categoryMatch =
         selectedCategory === "all"
@@ -106,7 +50,6 @@ export default function Admin({ allData }) {
       let dateMatch = true;
 
       if (item.createdAt) {
-
         const itemDate =
           item.createdAt
             .toDate()
@@ -127,46 +70,60 @@ export default function Admin({ allData }) {
       }
 
       return (
-        categoryMatch &&
-        dateMatch
+        categoryMatch && dateMatch
       );
     })
 
     .sort((a, b) => {
-
-      if (
-        a.pinned &&
-        !b.pinned
-      )
+      if (a.pinned && !b.pinned)
         return -1;
 
-      if (
-        !a.pinned &&
-        b.pinned
-      )
+      if (!a.pinned && b.pinned)
         return 1;
 
       return 0;
     });
 
   // =========================
+  // FORMAT DATE
+  // =========================
+
+  const formatDate = (timestamp) => {
+    if (!timestamp) return "-";
+
+    try {
+      const date =
+        timestamp.toDate();
+
+      return date.toLocaleString(
+        "id-ID",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }
+      );
+    } catch {
+      return "-";
+    }
+  };
+
+  // =========================
   // SELECT ITEM
   // =========================
-  const toggleSelect = (id) => {
 
+  const toggleSelect = (id) => {
     if (
       selectedItems.includes(id)
     ) {
-
       setSelectedItems(
         selectedItems.filter(
-          (item) =>
-            item !== id
+          (item) => item !== id
         )
       );
-
     } else {
-
       setSelectedItems([
         ...selectedItems,
         id,
@@ -177,17 +134,14 @@ export default function Admin({ allData }) {
   // =========================
   // SELECT ALL
   // =========================
-  const handleSelectAll = () => {
 
+  const handleSelectAll = () => {
     if (
       selectedItems.length ===
       filteredData.length
     ) {
-
       setSelectedItems([]);
-
     } else {
-
       setSelectedItems(
         filteredData.map(
           (item) => item.id
@@ -199,25 +153,19 @@ export default function Admin({ allData }) {
   // =========================
   // BULK ACTION
   // =========================
+
   const handleBulkAction =
     async (action) => {
-
       if (
         selectedItems.length === 0
       ) {
-
-        alert(
-          "Pilih data dulu"
-        );
-
+        alert("Pilih data dulu");
         return;
       }
 
       try {
-
         // DELETE
         if (action === "delete") {
-
           const confirmDelete =
             window.confirm(
               "Hapus data terpilih?"
@@ -227,7 +175,6 @@ export default function Admin({ allData }) {
             return;
 
           for (const id of selectedItems) {
-
             await deleteDoc(
               doc(
                 db,
@@ -244,9 +191,7 @@ export default function Admin({ allData }) {
 
         // ARCHIVE
         if (action === "archive") {
-
           for (const id of selectedItems) {
-
             await updateDoc(
               doc(
                 db,
@@ -266,9 +211,7 @@ export default function Admin({ allData }) {
 
         // PIN
         if (action === "pin") {
-
           for (const id of selectedItems) {
-
             await updateDoc(
               doc(
                 db,
@@ -288,9 +231,7 @@ export default function Admin({ allData }) {
 
         setSelectedItems([]);
         setBulkAction("");
-
       } catch (err) {
-
         console.log(err);
 
         alert(
@@ -302,15 +243,13 @@ export default function Admin({ allData }) {
   // =========================
   // SEND REPLY
   // =========================
+
   const sendReply =
     async (item) => {
-
       try {
-
         if (
           !replyMap[item.id]
         ) {
-
           alert(
             "Isi balasan dulu"
           );
@@ -362,9 +301,7 @@ export default function Admin({ allData }) {
         alert(
           "Reply berhasil dikirim"
         );
-
       } catch (err) {
-
         console.log(err);
 
         alert(
@@ -376,12 +313,11 @@ export default function Admin({ allData }) {
   // =========================
   // EXPORT EXCEL
   // =========================
-  const exportExcel = () => {
 
+  const exportExcel = () => {
     const excelData =
       filteredData.map(
         (item) => ({
-
           Nama:
             item.name || "-",
 
@@ -453,16 +389,16 @@ export default function Admin({ allData }) {
 
   return (
     <div>
-
       <h2 style={{ color: "#000" }}>
         📊 Dashboard Mood Share
       </h2>
 
       {/* FILTER */}
       <div style={styles.filterBox}>
-
         <select
-          value={selectedCategory}
+          value={
+            selectedCategory
+          }
           onChange={(e) =>
             setSelectedCategory(
               e.target.value
@@ -470,7 +406,6 @@ export default function Admin({ allData }) {
           }
           style={styles.select}
         >
-
           <option value="all">
             Semua Kategori
           </option>
@@ -486,11 +421,9 @@ export default function Admin({ allData }) {
           <option value="appreciate">
             Appreciate
           </option>
-
         </select>
 
         <div style={styles.dateRow}>
-
           <input
             type="date"
             value={startDate}
@@ -499,7 +432,9 @@ export default function Admin({ allData }) {
                 e.target.value
               )
             }
-            style={styles.dateInput}
+            style={
+              styles.dateInput
+            }
           />
 
           <input
@@ -510,30 +445,38 @@ export default function Admin({ allData }) {
                 e.target.value
               )
             }
-            style={styles.dateInput}
+            style={
+              styles.dateInput
+            }
           />
-
         </div>
 
         <button
-          onClick={exportExcel}
-          style={styles.exportButton}
+          onClick={
+            exportExcel
+          }
+          style={
+            styles.exportButton
+          }
         >
           📥 Export Excel
         </button>
-
       </div>
 
       {/* ACTION BAR */}
       <div style={styles.actionBar}>
-
-        <label style={styles.selectAll}>
+        <label
+          style={
+            styles.selectAll
+          }
+        >
           <input
             type="checkbox"
             checked={
               selectedItems.length ===
                 filteredData.length &&
-              filteredData.length > 0
+              filteredData.length >
+                0
             }
             onChange={
               handleSelectAll
@@ -546,7 +489,6 @@ export default function Admin({ allData }) {
         <select
           value={bulkAction}
           onChange={(e) => {
-
             const action =
               e.target.value;
 
@@ -560,9 +502,10 @@ export default function Admin({ allData }) {
               );
             }
           }}
-          style={styles.bulkSelect}
+          style={
+            styles.bulkSelect
+          }
         >
-
           <option value="">
             Action
           </option>
@@ -578,74 +521,164 @@ export default function Admin({ allData }) {
           <option value="delete">
             🗑 Delete
           </option>
-
         </select>
-
       </div>
 
       {/* LIST */}
-      {filteredData.map((item) => (
-
-        <div
-          key={item.id}
-          style={styles.card}
-        >
-
-          <div style={styles.topRow}>
-
-            <input
-              type="checkbox"
-              checked={selectedItems.includes(item.id)}
-              onChange={() =>
-                toggleSelect(item.id)
+      {filteredData.map(
+        (item) => (
+          <div
+            key={item.id}
+            style={styles.card}
+          >
+            <div
+              style={
+                styles.topRow
               }
-            />
+            >
+              <input
+                type="checkbox"
+                checked={selectedItems.includes(
+                  item.id
+                )}
+                onChange={() =>
+                  toggleSelect(
+                    item.id
+                  )
+                }
+              />
 
-            {item.pinned && (
-              <span style={styles.pinText}>
-                📌 Pinned
-              </span>
+              {item.pinned && (
+                <span
+                  style={
+                    styles.pinText
+                  }
+                >
+                  📌 Pinned
+                </span>
+              )}
+            </div>
+
+            <p style={styles.text}>
+              <b>Nama:</b>{" "}
+              {item.name}
+            </p>
+
+            <p style={styles.text}>
+              <b>Mood:</b>{" "}
+              {item.mood}
+            </p>
+
+            <p style={styles.text}>
+              <b>Kategori:</b>{" "}
+              {item.category}
+            </p>
+
+            <p style={styles.text}>
+              <b>Status:</b>{" "}
+              {item.status ||
+                "pending"}
+            </p>
+
+            <p style={styles.text}>
+              <b>Tanggal:</b>{" "}
+              {formatDate(
+                item.createdAt
+              )}
+            </p>
+
+            <p style={styles.text}>
+              <b>Cerita:</b>{" "}
+              {item.note}
+            </p>
+
+            {/* REPLY AREA */}
+            {!item.reply ? (
+              <>
+                {!openReply[
+                  item.id
+                ] ? (
+                  <div
+                    style={
+                      styles.tapReply
+                    }
+                    onClick={() =>
+                      setOpenReply(
+                        {
+                          ...openReply,
+                          [item.id]:
+                            true,
+                        }
+                      )
+                    }
+                  >
+                    💬 Tap untuk
+                    membalas
+                  </div>
+                ) : (
+                  <>
+                    <textarea
+                      placeholder="Tulis balasan..."
+                      value={
+                        replyMap[
+                          item.id
+                        ] || ""
+                      }
+                      onChange={(
+                        e
+                      ) =>
+                        setReplyMap(
+                          {
+                            ...replyMap,
+                            [item.id]:
+                              e.target
+                                .value,
+                          }
+                        )
+                      }
+                      style={
+                        styles.textarea
+                      }
+                    />
+
+                    <button
+                      onClick={() =>
+                        sendReply(
+                          item
+                        )
+                      }
+                      style={
+                        styles.replyButton
+                      }
+                    >
+                      Kirim Reply
+                    </button>
+                  </>
+                )}
+              </>
+            ) : (
+              <div
+                style={
+                  styles.replyBox
+                }
+              >
+                <b>
+                  HR Reply:
+                </b>
+
+                <p>
+                  {item.reply}
+                </p>
+              </div>
             )}
-
           </div>
-
-          <p style={styles.text}>
-            <b>Nama:</b> {item.name}
-          </p>
-
-          <p style={styles.text}>
-            <b>Mood:</b> {item.mood}
-          </p>
-
-          <p style={styles.text}>
-            <b>Kategori:</b>{" "}
-            {item.category}
-          </p>
-
-          <p style={styles.text}>
-            <b>Status:</b>{" "}
-            {item.status || "pending"}
-          </p>
-
-          <p style={styles.text}>
-            <b>Tanggal:</b>{" "}
-            {formatDate(item.createdAt)}
-          </p>
-
-          <p style={styles.text}>
-            <b>Cerita:</b>{" "}
-            {item.note}
-          </p>
-
-        </div>
-      ))}
-
+        )
+      )}
     </div>
   );
 }
 
 const styles = {
-
   filterBox: {
     background:
       "rgba(255,255,255,0.75)",
@@ -658,7 +691,8 @@ const styles = {
     width: "100%",
     padding: "12px",
     borderRadius: "14px",
-    border: "1px solid #cbd5e1",
+    border:
+      "1px solid #cbd5e1",
     marginBottom: "10px",
   },
 
@@ -672,7 +706,8 @@ const styles = {
     flex: 1,
     padding: "12px",
     borderRadius: "14px",
-    border: "1px solid #cbd5e1",
+    border:
+      "1px solid #cbd5e1",
   },
 
   exportButton: {
@@ -708,7 +743,8 @@ const styles = {
   bulkSelect: {
     padding: "10px",
     borderRadius: "12px",
-    border: "1px solid #cbd5e1",
+    border:
+      "1px solid #cbd5e1",
   },
 
   card: {
@@ -735,4 +771,51 @@ const styles = {
     color: "#334155",
     marginBottom: "8px",
   },
+
+  tapReply: {
+    marginTop: "14px",
+    padding: "14px",
+    borderRadius: "16px",
+    border:
+      "1px dashed #94a3b8",
+    textAlign: "center",
+    cursor: "pointer",
+    color: "#475569",
+    fontWeight: "600",
+    background: "#f8fafc",
+  },
+
+  textarea: {
+    width: "100%",
+    minHeight: "90px",
+    marginTop: "14px",
+    padding: "14px",
+    borderRadius: "16px",
+    border:
+      "1px solid #cbd5e1",
+    resize: "none",
+    boxSizing: "border-box",
+  },
+
+  replyButton: {
+    width: "100%",
+    marginTop: "12px",
+    padding: "13px",
+    border: "none",
+    borderRadius: "14px",
+    background:
+      "linear-gradient(135deg,#6366f1,#8b5cf6)",
+    color: "white",
+    fontWeight: "700",
+  },
+
+  replyBox: {
+    marginTop: "14px",
+    padding: "14px",
+    borderRadius: "16px",
+    background:
+      "linear-gradient(135deg,#eff6ff,#dbeafe)",
+    color: "#000",
+  },
 };
+
