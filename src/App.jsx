@@ -62,9 +62,14 @@ export default function App() {
   // =========================
   // ADMIN
   // =========================
-  const isAdmin =
-    user?.email === "muhamadtopa08@gmail.com";
+ const adminEmails = [
+  "muhamadtopa08@gmail.com",
+  "career@mitraasa.co.id",
+  "hrd@mitraasa.co.id",
+];
 
+const isAdmin =
+  adminEmails.includes(user?.email);
   // =========================
   // MOOD DATA
   // =========================
