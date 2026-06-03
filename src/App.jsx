@@ -70,6 +70,10 @@ export default function App() {
 
 const isAdmin =
   adminEmails.includes(user?.email);
+
+const isMobile =
+  /Android|iPhone|iPad|iPod/i.test(
+    navigator.userAgent);
   // =========================
   // MOOD DATA
   // =========================
@@ -281,10 +285,7 @@ useEffect(() => {
   }, []);
 
 
-  // =========================
-  // LOGIN PAGE
-  // =========================
-  // =========================
+// =========================
 // LOGIN PAGE
 // =========================
 if (!user) {
@@ -382,6 +383,66 @@ if (!user) {
   (item) =>
     item.status !== "replied"
 ).length;
+
+// =========================
+// BLOCK DESKTOP FOR USER
+// =========================
+if (!isAdmin && !isMobile) {
+  return (
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        padding: "20px",
+        background:
+          "linear-gradient(135deg,#eef2ff,#f8fafc)",
+      }}
+    >
+      <div
+        style={{
+          background: "#fff",
+          padding: "30px",
+          borderRadius: "24px",
+          maxWidth: "400px",
+          boxShadow:
+            "0 10px 30px rgba(0,0,0,0.08)",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "60px",
+            marginBottom: "10px",
+          }}
+        >
+          📱
+        </div>
+
+        <h2
+          style={{
+            color: "#0f172a",
+            marginBottom: "10px",
+          }}
+        >
+          Mobile Device Required
+        </h2>
+
+        <p
+          style={{
+            color: "#64748b",
+            lineHeight: "1.6",
+          }}
+        >
+          Aplikasi VoE MAP hanya dapat digunakan
+          melalui perangkat mobile. Silakan buka
+          kembali menggunakan smartphone Anda.
+        </p>
+      </div>
+    </div>
+  );
+}
   // =========================
   // MAIN APP
   // =========================
