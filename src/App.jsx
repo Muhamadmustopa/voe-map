@@ -335,9 +335,7 @@ if (!user) {
             color: "#0f172a",
             marginBottom: "8px",
           }}
-        >
-          VoE MAP
-        </h1>
+        >VoE MAP</h1>
 
         <p
           style={{
@@ -346,9 +344,7 @@ if (!user) {
             lineHeight: "1.6",
             marginBottom: "30px",
           }}
-        >
-          Employee Mood & Story Platform
-        </p>
+        >Voice of Employee & Story Platform</p>
 
         {/* LOGIN BUTTON */}
         <button
