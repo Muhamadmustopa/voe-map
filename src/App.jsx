@@ -64,6 +64,7 @@ export default function App() {
   // =========================
  const adminEmails = [
   "muhamadtopa08@gmail.com",
+  "hrdga@mitraasa.co.id",
   "career@mitraasa.co.id",
   "hrd@mitraasa.co.id",
 ];
