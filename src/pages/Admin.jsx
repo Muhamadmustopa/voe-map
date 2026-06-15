@@ -279,22 +279,16 @@ export default function Admin({ allData }) {
             replyRead: false,
           }
         );
-
         await emailjs.send(
-          "service_9e912oa",
-          "template_n5ncvx4",
+          "service_HRD",
+          "template_voe_map",
           {
-            to_email:
-              item.email,
-
-            mood:
-              item.mood,
-
-            note:
-              item.note,
-
-            reply:
-              replyMap[item.id],
+            to_name: item.name,
+            to_email: item.email,
+            email: item.email,
+            mood: item.mood,
+            note: item.note,
+            reply: replyMap[item.id],
           },
           "mACZL1JrwWfQc1NAY"
         );
