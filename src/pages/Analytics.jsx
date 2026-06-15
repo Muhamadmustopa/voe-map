@@ -86,10 +86,6 @@ export default function Analytics({
           📊Mood Analytics
         </h1>
 
-        <p style={styles.subtitle}>
-          Employee mood statistic
-        </p>
-
       </div>
 
       {/* TOTAL */}

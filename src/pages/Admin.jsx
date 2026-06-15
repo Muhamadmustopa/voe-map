@@ -279,6 +279,12 @@ export default function Admin({ allData }) {
             replyRead: false,
           }
         );
+
+        // DEBUG
+        console.log("SERVICE:", "service_HRD");
+        console.log("TEMPLATE:", "template_voe_map");
+        console.log("PUBLIC KEY:", "RXcNUKvJP2TONUsW2");
+        
         await emailjs.send(
           "service_HRD",
           "template_voe_map",
