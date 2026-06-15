@@ -286,7 +286,7 @@ export default function Admin({ allData }) {
         console.log("PUBLIC KEY:", "RXcNUKvJP2TONUsW2");
         
         await emailjs.send(
-          "service_HRD",
+          "service_2zre6so",
           "template_voe_map",
           {
             to_name: item.name,
