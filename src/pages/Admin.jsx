@@ -281,12 +281,12 @@ export default function Admin({ allData }) {
         );
 
         // DEBUG
-        console.log("SERVICE:", "service_2zre6so");
+        console.log("SERVICE:", "service_4ftcuxi");
         console.log("TEMPLATE:", "template_voe_map");
         console.log("PUBLIC KEY:", "40u6HLK_alJn30t4x");
         
         await emailjs.send(
-          "service_2zre6so",
+          "service_4ftcuxi",
           "template_voe_map",
           {
             to_name: item.name,
