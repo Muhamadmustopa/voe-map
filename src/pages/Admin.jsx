@@ -283,7 +283,7 @@ export default function Admin({ allData }) {
         // DEBUG
         console.log("SERVICE:", "service_4ftcuxi");
         console.log("TEMPLATE:", "template_voe_map");
-        console.log("PUBLIC KEY:", "40u6HLK_alJn30t4x");
+        console.log("PUBLIC KEY:", "G4INnLjwxCZYsK28j");
         
         await emailjs.send(
           "service_4ftcuxi",
@@ -296,7 +296,7 @@ export default function Admin({ allData }) {
             note: item.note,
             reply: replyMap[item.id],
           },
-          "40u6HLK_alJn30t4x"
+          "G4INnLjwxCZYsK28j"
         );
 
         alert(
