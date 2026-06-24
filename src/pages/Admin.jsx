@@ -281,9 +281,9 @@ export default function Admin({ allData }) {
         );
 
         // DEBUG
-        console.log("SERVICE:", "service_HRD");
+        console.log("SERVICE:", "service_2zre6so");
         console.log("TEMPLATE:", "template_voe_map");
-        console.log("PUBLIC KEY:", "RXcNUKvJP2TONUsW2");
+        console.log("PUBLIC KEY:", "40u6HLK_alJn30t4x");
         
         await emailjs.send(
           "service_2zre6so",
@@ -303,12 +303,12 @@ export default function Admin({ allData }) {
           "Reply berhasil dikirim"
         );
       } catch (err) {
-        console.log(err);
+      console.log("STATUS:", err?.status);
+      console.log("TEXT:", err?.text);
+      console.log(err);
 
-        alert(
-          "Gagal kirim reply"
-        );
-      }
+      alert("Gagal kirim reply");
+    }
     };
 
   // =========================
