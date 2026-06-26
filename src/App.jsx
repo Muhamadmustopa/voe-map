@@ -352,21 +352,41 @@ if (!user) {
           onClick={login}
           style={{
             width: "100%",
-            padding: "15px",
-            borderRadius: "18px",
-            border: "none",
-            background:
-              "linear-gradient(135deg,#6366f1,#8b5cf6)",
-            color: "white",
-            fontWeight: "700",
+            padding: "14px 18px",
+            borderRadius: "14px",
+            border: "1px solid #000",
+            background: "#fff",
+            color: "#000",
+            fontWeight: "600",
             fontSize: "15px",
             cursor: "pointer",
-            boxShadow:
-              "0 10px 25px rgba(99,102,241,.35)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "12px",
+            transition: "all .25s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "#f5f5f5";
+            e.currentTarget.style.boxShadow =
+              "0 6px 18px rgba(0,0,0,.12)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "#fff";
+            e.currentTarget.style.boxShadow = "none";
           }}
         >
-          Login dengan Google
-        </button>
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt="Google"
+            style={{
+              width: "22px",
+              height: "22px",
+            }}
+          />
+
+      <span>Sign in with Google</span>
+      </button>
       </div>
     </div>
   );
