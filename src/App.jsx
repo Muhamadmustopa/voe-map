@@ -15,6 +15,8 @@ import {
   where,
   orderBy,
   onSnapshot,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 
 import Navbar from "./components/Navbar";
@@ -62,15 +64,7 @@ export default function App() {
   // =========================
   // ADMIN
   // =========================
- const adminEmails = [
-  "muhamadtopa08@gmail.com",
-  "hrdga@mitraasa.co.id",
-  "career@mitraasa.co.id",
-  "hrd@mitraasa.co.id",
-];
-
-const isAdmin =
-  adminEmails.includes(user?.email);
+ const [isAdmin, setIsAdmin] = useState(false);
 
 const isMobile =
   /Android|iPhone|iPad|iPod/i.test(
@@ -207,14 +201,29 @@ const isMobile =
 
   useEffect(() => {
 
-  const unsub =
-    onAuthStateChanged(
-      auth,
-      (currentUser) => {
+  const unsub = onAuthStateChanged(auth, async (currentUser) => {
 
-        setUser(currentUser);
-      }
-    );
+    setUser(currentUser);
+
+    if (currentUser) {
+
+      const adminRef = doc(
+        db,
+        "admins",
+        currentUser.uid
+      );
+
+      const snap = await getDoc(adminRef);
+
+      setIsAdmin(snap.exists());
+
+    } else {
+
+      setIsAdmin(false);
+
+    }
+
+  });
 
   return () => unsub();
 
@@ -265,26 +274,27 @@ useEffect(() => {
   // =========================
   useEffect(() => {
 
-    const q = query(
-      collection(db, "moods"),
-      orderBy("createdAt", "desc")
-    );
+  if (!isAdmin) return;
 
-    const unsub = onSnapshot(q, (snapshot) => {
+  const q = query(
+    collection(db, "moods"),
+    orderBy("createdAt", "desc")
+  );
 
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+  const unsub = onSnapshot(q, (snapshot) => {
 
-      setAllData(data);
+    const data = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
 
-    });
+    setAllData(data);
 
-    return () => unsub();
+  });
 
-  }, []);
+  return () => unsub();
 
+}, [isAdmin]);
 
 // =========================
 // LOGIN PAGE
